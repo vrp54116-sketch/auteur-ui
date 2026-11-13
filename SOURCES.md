@@ -67,3 +67,13 @@ No proprietary code or copyrighted web assets are bundled at runtime. Aesthetic 
 - **`motion.md` & `code/motion/`**: Disney's 12 basic principles of animation and Robert Penner's easing equations compiled into 8 Web Animations API (WAAPI) zero-dependency primitives.
 - **`sound.md` & `code/sound/`**: Synthesized procedural audio blips compiled with WebAudio oscillators and noise buffers (zero external audio samples or proprietary binaries).
 - **`components.md` & `code/css/`**: Surface tokens distilled from open design tokens and component specifications under MIT and SIL OFL 1.1 licenses.
+
+---
+
+## Agent Adapters & Discovery Specifications
+
+- **Claude Code**: Tool and skill discovery standards (`.claude/skills/<name>/SKILL.md` and `.claude/commands/<command>.md`).
+- **OpenCode**: Skill directory (`.opencode/skills/`), commands (`.opencode/commands/`), and `opencode.json` configuration schema.
+- **Cursor**: Rule specification (`.cursor/rules/<name>.mdc`) with YAML frontmatter schema (`description`, `globs`, `alwaysApply`).
+- **AGENTS.md**: Open cross-agent context instruction standard supported by Codex, Antigravity, and generic AI coding assistants with idempotent delimiter fences (`<!-- auteur-ui:start -->` ... `<!-- auteur-ui:end -->`).
+

@@ -781,3 +781,205 @@ STATUS         : ✓ CERTIFIED NON-GENERIC
 - **Presets**: `--lean` (8k), `--standard` (20k), `--cinema` (40k) verified
 - **Firewall Invariant**: $\le 20$ lines, code blocks $\le 5$ lines, zero preamble verified
 
+
+
+## Phase 8: One-Command Install Across Agents
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`adapters/PATHS.md`** — Documented candidate binary names, project configuration directories, global configuration directories, and official documentation links for Claude Code, opencode, Cursor, Codex, and Antigravity (checked 2026-11-13).
+2. **`packages/cli/init.ts`** — Implementation of `npx auteur-ui init`:
+   - Interactive but scriptable with `--yes` (`-y`), `--agent <name>`, `--global` (`-g`), `--vendor`, and `--cwd <dir>`.
+   - Candidate list probing for config dirs and binaries (never assumes a single path, reports which candidate matched).
+   - **Claude Code**: `.claude/skills/auteur-ui/SKILL.md` + `.claude/commands/auteur-ui.md` (or `~/.claude/` if `--global`).
+   - **opencode**: `.opencode/skills/auteur-ui/SKILL.md` + `.opencode/commands/auteur-ui.md` + `opencode.json` configuration snippet (or `~/.config/opencode/` if `--global`).
+   - **Cursor**: `.cursor/rules/auteur-ui.mdc` (condensed router respecting <= 500 token budget).
+   - **Codex / Antigravity / Generic**: Idempotent fenced block in `AGENTS.md` (`<!-- auteur-ui:start --> ... <!-- auteur-ui:end -->`).
+   - Copies assets to `.auteur-ui/assets/` (`css/`, `motion/`, `sound/`, `type/`), gitignored by default (or committed with `--vendor`).
+   - Writes `.auteur-ui/version` + `.auteur-ui/lockfile.json` pinning artifact SHA-256 hashes.
+   - Prints full file manifest and uninstallation instructions.
+3. **`packages/cli/uninstall.ts`** — Implementation of `npx auteur-ui uninstall`:
+   - Non-destructive uninstaller that removes only auteur-ui managed files, empty directories, and fenced blocks.
+   - Never touches user files, custom rules in `AGENTS.md`, custom keys in `opencode.json`, or user lines in `.gitignore`.
+   - Restores clean repositories byte-for-byte.
+4. **`packages/cli/update.ts`** — Implementation of `npx auteur-ui update`:
+   - Offline artifact synchronizer that re-copies assets from the pinned package release and refreshes the lockfile with zero runtime network calls.
+5. **`packages/cli/doctor.ts`** — Upgraded diagnostic suite verifying:
+   - Skill discoverability across all agent candidate paths.
+   - Router token budget ($\le 500$ tokens via `gpt-tokenizer`).
+   - Assets presence in `.auteur-ui/assets/` or `code/` (css, motion, sound, type).
+   - Playwright headless browser engine installed.
+   - Node.js runtime version ($\ge 18.0.0$).
+   - Design contract validity against schema.
+   - Workflow trace health via `verifyTrace()`.
+   - Emits an actionable fix line for every failed check.
+6. **`tests/installer.spec.ts`** — Comprehensive test suite covering all 5 adapters, idempotency, byte-for-byte uninstall, dirty repo preservation, doctor diagnostics, update synchronizer, and candidate probing.
+
+---
+
+### Acceptance Command Run 1: 5 Adapter Test Suite
+```bash
+npx vitest run tests/installer.spec.ts
+```
+
+### Actual Output:
+```
+ RUN  v5.1.0 /Users/vanshpatel/Desktop/auteur-ui
+
+ ✓ tests/installer.spec.ts (9 tests) 182ms
+   ✓ Phase 8: Installer Suite Across Coding Agents (9)
+     ✓ installs Claude Code adapter, enforces idempotency, and cleans up cleanly 31ms
+     ✓ installs opencode adapter, updates opencode.json, and uninstalls cleanly 25ms
+     ✓ installs Cursor adapter, asserts router token budget <= 500, and uninstalls cleanly 24ms
+     ✓ installs Codex adapter into existing AGENTS.md, preserves user content, uninstalls cleanly 24ms
+     ✓ installs Antigravity/generic adapter into new AGENTS.md and uninstalls byte-for-byte 24ms
+     ✓ preserves all user files in a dirty fixture repo during uninstall 16ms
+     ✓ doctor passes on healthy installation and emits actionable fixes on missing parts 16ms
+     ✓ update command deterministically synchronizes assets and refreshes lockfile 21ms
+     ✓ probes candidate directories and detects correct agent 1ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  21:13:35
+   Duration  352ms (tests 64%, import 27%, transform 8%, worker 1%)
+```
+
+---
+
+### Acceptance Command Run 2: Real `init` in Scratch Next.js App
+```bash
+cd /tmp/scratch-nextjs-app && npx auteur-ui init --yes
+```
+
+### Actual Output:
+```
+======================================================
+             auteur-ui System Installer
+======================================================
+Target Directory : /private/tmp/scratch-nextjs-app
+Target Agent     : claude
+Detection Method : binary (/opt/homebrew/bin/claude)
+Scope            : Project-local
+Vendor Assets    : No (.gitignore)
+------------------------------------------------------
+
+Installation Complete. Files created / managed:
+  + .claude/skills/auteur-ui/SKILL.md
+  + .claude/commands/auteur-ui.md
+  + .auteur-ui/assets/README.md
+  + .auteur-ui/assets/css/elevation.css
+  + .auteur-ui/assets/css/focus.css
+  + .auteur-ui/assets/css/index.css
+  + .auteur-ui/assets/css/motion.css
+  + .auteur-ui/assets/css/reset.css
+  + .auteur-ui/assets/css/rhythm.css
+  + .auteur-ui/assets/css/tailwind-theme.css
+  + .auteur-ui/assets/css/tokens.css
+  + .auteur-ui/assets/css/type.css
+  + .auteur-ui/assets/motion/boot.mjs
+  + .auteur-ui/assets/motion/flip.mjs
+  + .auteur-ui/assets/motion/magnetic-hover.mjs
+  + .auteur-ui/assets/motion/number-ticker.mjs
+  + .auteur-ui/assets/motion/page-transition.mjs
+  + .auteur-ui/assets/motion/personalities.json
+  + .auteur-ui/assets/motion/react/flip.js
+  + .auteur-ui/assets/motion/react/magnetic-hover.js
+  + .auteur-ui/assets/motion/react/number-ticker.js
+  + .auteur-ui/assets/motion/react/page-transition.js
+  + .auteur-ui/assets/motion/react/reveal-on-scroll.js
+  + .auteur-ui/assets/motion/react/skeleton-crossfade.js
+  + .auteur-ui/assets/motion/react/spring-sheet.js
+  + .auteur-ui/assets/motion/react/spring-sheet.motion.jsx
+  + .auteur-ui/assets/motion/react/stagger-list.js
+  + .auteur-ui/assets/motion/reveal-on-scroll.mjs
+  + .auteur-ui/assets/motion/skeleton-crossfade.mjs
+  + .auteur-ui/assets/motion/spring-sheet.mjs
+  + .auteur-ui/assets/motion/stagger-list.mjs
+  + .auteur-ui/assets/motion/tokens.mjs
+  + .auteur-ui/assets/sound/initSound.mjs
+  + .auteur-ui/assets/sound/kits/analog-tape.mjs
+  + .auteur-ui/assets/sound/kits/glass.mjs
+  + .auteur-ui/assets/sound/kits/minimal-click.mjs
+  + .auteur-ui/assets/sound/kits/soft-mechanical.mjs
+  + .auteur-ui/assets/sound/useUISound.js
+  + .auteur-ui/assets/sound/voice.mjs
+  + .auteur-ui/assets/type/font-face.css
+  + .auteur-ui/assets/type/index.mjs
+  + .auteur-ui/assets/type/next-font.js
+  + .auteur-ui/assets/type/pairings.json
+  + .auteur-ui/assets/type/scales.css
+  + .gitignore
+  + .auteur-ui/version
+  + .auteur-ui/lockfile.json
+  + .auteur-ui/install-manifest.json
+
+------------------------------------------------------
+To uninstall and clean up all managed files, run:
+  npx auteur-ui uninstall
+======================================================
+```
+
+---
+
+### Acceptance Command Run 3: Doctor Diagnostics in Scratch Next.js App
+```bash
+cd /tmp/scratch-nextjs-app && npx auteur-ui doctor
+```
+
+### Actual Output:
+```
+======================================================
+         auteur-ui System Doctor Checklist
+======================================================
+
+ [✓] Skill Discoverability   : Discovered Claude Code skill at /private/tmp/scratch-nextjs-app/.claude/skills/auteur-ui/SKILL.md
+ [✓] Router Token Budget     : 463 tokens (limit: <= 500 tokens)
+ [✓] Assets Present          : Assets verified in .auteur-ui/assets/ (4/4 categories)
+ [✓] Playwright Engine       : Playwright installed for headless rendering
+ [✓] Node.js Version         : v26.13.0 (>= 18.0.0 required)
+ [✓] Contract Validity       : .auteur-ui/contract.json (not generated yet — ready for lock)
+ [✓] Trace Health            : .auteur-ui/trace.jsonl (no execution steps yet)
+
+------------------------------------------------------
+Status: All diagnostic checks passed (7/7).
+```
+
+---
+
+### Acceptance Command Run 4: Clean Uninstall Verification
+```bash
+cd /tmp/scratch-nextjs-app && npx auteur-ui uninstall
+```
+
+### Actual Output:
+```
+======================================================
+             auteur-ui System Uninstaller
+======================================================
+Target Directory : /private/tmp/scratch-nextjs-app
+------------------------------------------------------
+
+Uninstallation complete. Cleaned items:
+  - .claude/skills/auteur-ui/SKILL.md
+  - .claude/commands/auteur-ui.md
+  - .gitignore (auteur-ui entries removed)
+  - .auteur-ui/assets/
+  - .auteur-ui/version
+  - .auteur-ui/lockfile.json
+  - .auteur-ui/install-manifest.json
+
+User files and git history remain untouched.
+======================================================
+```
+
+---
+
+### Overall Test Suite & Invariant Audit
+- **Total Test Files**: 20 passed (20)
+- **Total Tests**: 99 passed (99)
+- **Router Token Budget**: 463 / 500 tokens (**PASS**)
+- **Slash Command Budget**: 111 / 120 tokens (**PASS**)
+- **Idempotency**: Verified across all 5 adapters (double install produces exact zero diff)
+- **Safe Uninstallation**: Verified on dirty fixture repo (preserves user code, user configs, custom `.gitignore`, user rules in `AGENTS.md`)
