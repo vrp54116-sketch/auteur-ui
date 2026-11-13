@@ -52,3 +52,4 @@ Two mechanisms guarantee authenticity:
 - **Tailwind CSS** (via bundled `.auteur-ui/assets/css/tailwind-theme.css`)
 - **React / Vite** (using the provided React motion and sound hooks)
 - **Next.js** (App Router and Pages Router, with offline font definitions)
+

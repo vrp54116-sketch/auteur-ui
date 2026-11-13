@@ -99,3 +99,4 @@ To completely remove all managed skill files, slash commands, manifests, and ass
 ```bash
 npx auteur-ui uninstall
 ```
+

@@ -114,3 +114,4 @@ Everything needed to render world-class UI is vendored directly into `.auteur-ui
 - **WAAPI Motion Primitives**: Self-contained Web Animations API scripts (`flip.mjs`, `stagger-list.mjs`, `spring-sheet.mjs`, `magnetic-hover.mjs`).
 - **Web Audio Sound Synthesizers**: Algorithmic, byte-sized Web Audio oscillators (`minimal-click.mjs`, `glass.mjs`, `analog-tape.mjs`, `soft-mechanical.mjs`). No external audio files.
 - **Curated Typography Scales**: Pre-configured fluid clamp scales and system font stacks for instant zero-CDN offline builds.
+

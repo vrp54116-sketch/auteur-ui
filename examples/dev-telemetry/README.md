@@ -26,3 +26,4 @@ A high-density operational telemetry dashboard built with the `swiss-utility` lo
 ```bash
 open index.html
 ```
+

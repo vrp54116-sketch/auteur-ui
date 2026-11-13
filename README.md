@@ -136,3 +136,4 @@ We believe in radical engineering honesty about what this tool is and is not:
 
 - **Distilled Design Skills**: All executable rules are distilled from permissive open-source design skills (MIT & Apache-2.0). See full source records and commit hashes in [`SOURCES.md`](SOURCES.md).
 - **License**: Released under the [MIT License](LICENSE). Copyright (c) 2026 auteur-ui contributors.
+

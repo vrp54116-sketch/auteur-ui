@@ -135,3 +135,4 @@ This verifies:
 2. All color tokens parse as valid OKLCH colors.
 3. Every look listed in `looks/index.json` has a corresponding directory with `look.json` and `README.md`.
 4. Typography scale and space ratios strictly observe token budgets.
+

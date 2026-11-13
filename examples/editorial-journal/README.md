@@ -26,3 +26,4 @@ A literary monograph and photo journal reading interface built with the `paper-e
 ```bash
 open index.html
 ```
+
