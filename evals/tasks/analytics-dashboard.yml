@@ -1,0 +1,18 @@
+id: analytics-dashboard
+prompt: "Build an analytics dashboard for a dev tool."
+stack: "html, css, js"
+viewport:
+  width: 1440
+  height: 900
+success_criteria:
+  - "Real-time metrics or timeseries charts for request volume, error rates, and p95/p99 latency"
+  - "Structured log stream or recent events inspection table with filtering"
+  - "Service health and deployment status indicators"
+  - "Date range selector and environment switch"
+  - "Dense information architecture with clear tabular alignment"
+forbidden_patterns:
+  - "Centered marketing landing hero"
+  - "Three equal-width pricing or feature cards"
+  - "Purple gradient hero header"
+  - "Emoji bullet lists instead of data visualizations"
+  - "Unstyled default system fonts with poor contrast"

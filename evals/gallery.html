@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>auteur-ui &middot; Blind Human Evaluation Gallery</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #121215;
+      --surface-elevated: #18181b;
+      --border: #27272a;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --accent: #6366f1;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    .top-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 9, 11, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .blind-banner {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .toolbar-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .control-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-group {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .btn-group button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-group button.active {
+      background: var(--surface-elevated);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 32px auto;
+      padding: 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .comparison-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .comp-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .comp-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .comp-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .matchup-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      divide-x: 1px solid var(--border);
+    }
+
+    .candidate-panel {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .candidate-panel:first-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .candidate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .candidate-tag {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .candidate-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .screenshot-display {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 480px;
+      max-height: 720px;
+      overflow-y: auto;
+    }
+
+    .screenshot-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
+    .screenshot-img.mobile-view {
+      max-width: 390px;
+      margin: 0 auto;
+    }
+
+    .candidate-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .vote-btn {
+      background: var(--surface-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .vote-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .vote-btn.selected {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+
+    @media (max-width: 960px) {
+      .matchup-container {
+        grid-template-columns: 1fr;
+      }
+      .candidate-panel:first-child {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-toolbar">
+    <div class="brand">
+      <h1>auteur-ui &middot; Blind Human Grading</h1>
+      <span class="blind-banner">BLIND LABELS ACTIVE</span>
+    </div>
+
+    <div class="toolbar-controls">
+      <span class="control-label">Viewport:</span>
+      <div class="btn-group" id="viewport-toggle">
+        <button class="active" onclick="switchViewport('desktop')">Desktop (1440px)</button>
+        <button onclick="switchViewport('mobile')">Mobile (390px)</button>
+      </div>
+
+      <span class="control-label">Region:</span>
+      <div class="btn-group" id="fold-toggle">
+        <button class="active" onclick="switchFold('above')">Above Fold</button>
+        <button onclick="switchFold('full')">Full Page</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    
+      <div class="comparison-card" id="comp-1">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #1: Task &ldquo;analytics-dashboard&rdquo; (Iteration 1)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-1-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-analytics-dashboard-seed1/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-analytics-dashboard-seed1/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-analytics-dashboard-seed1/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-analytics-dashboard-seed1/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-analytics-dashboard-seed1/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('1', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-2">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #2: Task &ldquo;analytics-dashboard&rdquo; (Iteration 2)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-2-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-analytics-dashboard-seed2/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-analytics-dashboard-seed2/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-analytics-dashboard-seed2/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-analytics-dashboard-seed2/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-analytics-dashboard-seed2/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('2', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-3">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #3: Task &ldquo;analytics-dashboard&rdquo; (Iteration 3)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-3-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-analytics-dashboard-seed3/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-analytics-dashboard-seed3/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-analytics-dashboard-seed3/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-analytics-dashboard-seed3/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-analytics-dashboard-seed3/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('3', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-4">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #4: Task &ldquo;editorial-journal&rdquo; (Iteration 1)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-4-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-editorial-journal-seed1/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-editorial-journal-seed1/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-editorial-journal-seed1/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-editorial-journal-seed1/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-editorial-journal-seed1/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('4', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-5">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #5: Task &ldquo;editorial-journal&rdquo; (Iteration 2)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-5-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-editorial-journal-seed2/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-editorial-journal-seed2/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-editorial-journal-seed2/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-editorial-journal-seed2/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-editorial-journal-seed2/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('5', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-6">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #6: Task &ldquo;editorial-journal&rdquo; (Iteration 3)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-6-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-editorial-journal-seed3/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-editorial-journal-seed3/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-editorial-journal-seed3/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-editorial-journal-seed3/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-editorial-journal-seed3/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('6', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-7">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #7: Task &ldquo;oss-landing&rdquo; (Iteration 1)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-7-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-oss-landing-seed1/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-oss-landing-seed1/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-oss-landing-seed1/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-oss-landing-seed1/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-oss-landing-seed1/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('7', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-8">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #8: Task &ldquo;oss-landing&rdquo; (Iteration 2)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-8-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-oss-landing-seed2/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-oss-landing-seed2/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-oss-landing-seed2/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-oss-landing-seed2/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-oss-landing-seed2/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('8', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-9">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #9: Task &ldquo;oss-landing&rdquo; (Iteration 3)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-9-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-oss-landing-seed3/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-oss-landing-seed3/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-oss-landing-seed3/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-oss-landing-seed3/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-oss-landing-seed3/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('9', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-10">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #10: Task &ldquo;settings-billing&rdquo; (Iteration 1)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-10-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-settings-billing-seed1/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-settings-billing-seed1/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-settings-billing-seed1/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-settings-billing-seed1/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-settings-billing-seed1/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('10', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-11">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #11: Task &ldquo;settings-billing&rdquo; (Iteration 2)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-11-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-settings-billing-seed2/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-settings-billing-seed2/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-settings-billing-seed2/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-settings-billing-seed2/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-settings-billing-seed2/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('11', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-12">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #12: Task &ldquo;settings-billing&rdquo; (Iteration 3)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-12-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-settings-billing-seed3/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-settings-billing-seed3/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-settings-billing-seed3/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-settings-billing-seed3/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-settings-billing-seed3/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('12', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-13">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #13: Task &ldquo;spotify-listening&rdquo; (Iteration 1)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-13-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-spotify-listening-seed1/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-spotify-listening-seed1/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-spotify-listening-seed1/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-spotify-listening-seed1/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-spotify-listening-seed1/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('13', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-14">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #14: Task &ldquo;spotify-listening&rdquo; (Iteration 2)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-14-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-spotify-listening-seed2/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-spotify-listening-seed2/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-spotify-listening-seed2/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-spotify-listening-seed2/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-spotify-listening-seed2/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('14', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+
+      <div class="comparison-card" id="comp-15">
+        <div class="comp-header">
+          <div class="comp-title">Comparison #15: Task &ldquo;spotify-listening&rdquo; (Iteration 3)</div>
+          <div class="comp-badge">Blind Evaluation</div>
+        </div>
+
+        <div class="matchup-container">
+          <!-- Option A -->
+          <div class="candidate-panel">
+            <div class="candidate-header">
+              <span class="candidate-tag">Option A</span>
+              <span class="candidate-meta">COMP-15-A</span>
+            </div>
+            <div class="screenshot-display">
+              <img src="runs/baseline-spotify-listening-seed3/screenshot-1440x900-above.png"
+                   class="screenshot-img"
+                   data-desktop-above="runs/baseline-spotify-listening-seed3/screenshot-1440x900-above.png"
+                   data-desktop-full="runs/baseline-spotify-listening-seed3/screenshot-1440x900-full.png"
+                   data-mobile-above="runs/baseline-spotify-listening-seed3/screenshot-390x844-above.png"
+                   data-mobile-full="runs/baseline-spotify-listening-seed3/screenshot-390x844-full.png"
+                   alt="Option A Screenshot" />
+            </div>
+            <div class="candidate-footer">
+              <div class="score-buttons">
+                <button class="vote-btn" onclick="recordVote('15', 'A')">Vote Option A</button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="candidate-panel solitary">
+            <div class="candidate-header">
+              <span class="candidate-tag">Benchmark Specimen</span>
+            </div>
+            <div style="padding: 40px; text-align: center; color: #71717a;">
+              Single-arm baseline benchmark run. Run with another arm to unlock live A/B pairwise grading.
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+  </div>
+
+  <script>
+    let currentViewport = 'desktop';
+    let currentFold = 'above';
+    const votes = {};
+
+    function updateScreenshots() {
+      const imgs = document.querySelectorAll('.screenshot-img');
+      const key = currentViewport + '-' + currentFold;
+      imgs.forEach((img) => {
+        let src;
+        if (key === 'desktop-above') src = img.dataset.desktopAbove;
+        else if (key === 'desktop-full') src = img.dataset.desktopFull;
+        else if (key === 'mobile-above') src = img.dataset.mobileAbove;
+        else if (key === 'mobile-full') src = img.dataset.mobileFull;
+
+        if (src) img.src = src;
+        if (currentViewport === 'mobile') {
+          img.classList.add('mobile-view');
+        } else {
+          img.classList.remove('mobile-view');
+        }
+      });
+    }
+
+    function switchViewport(vp) {
+      currentViewport = vp;
+      document.querySelectorAll('#viewport-toggle button').forEach((b, i) => {
+        b.classList.toggle('active', (vp === 'desktop' && i === 0) || (vp === 'mobile' && i === 1));
+      });
+      updateScreenshots();
+    }
+
+    function switchFold(fold) {
+      currentFold = fold;
+      document.querySelectorAll('#fold-toggle button').forEach((b, i) => {
+        b.classList.toggle('active', (fold === 'above' && i === 0) || (fold === 'full' && i === 1));
+      });
+      updateScreenshots();
+    }
+
+    function recordVote(compId, choice) {
+      votes[compId] = choice;
+      const card = document.getElementById('comp-' + compId);
+      if (card) {
+        card.querySelectorAll('.vote-btn').forEach((btn) => {
+          const isThisChoice = btn.innerText.includes('Option ' + choice);
+          btn.classList.toggle('selected', isThisChoice);
+        });
+      }
+      console.log('Recorded vote for comp', compId, choice, votes);
+    }
+  </script>
+</body>
+</html>

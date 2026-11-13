@@ -1,0 +1,18 @@
+id: oss-landing
+prompt: "Build a landing page for an open-source library."
+stack: "html, css, js"
+viewport:
+  width: 1440
+  height: 900
+success_criteria:
+  - "One-line copyable terminal installation command with package manager selector"
+  - "Syntax-highlighted code example demonstrating minimal quickstart API usage"
+  - "Key capabilities and architecture overview with clear visual hierarchy"
+  - "Header navigation linking to GitHub repository, documentation, and version badge"
+  - "Clean, readable typography with distinct styling for code and prose"
+forbidden_patterns:
+  - "Generic purple-to-blue gradient background banner"
+  - "Three equal feature cards with 8px radius and drop shadow"
+  - "Emoji icons as section headers"
+  - "Centered generic 'Unlock 10x developer productivity' copy"
+  - "Vague placeholder graphics without code content"

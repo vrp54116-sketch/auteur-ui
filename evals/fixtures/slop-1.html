@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudFlow - Next Gen Platform</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      padding: 100px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 32px auto;
+      opacity: 0.9;
+    }
+
+    .cta-btn {
+      background-color: #ffffff;
+      color: #6366f1;
+      padding: 14px 28px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .features-section {
+      max-width: 1200px;
+      margin: -40px auto 60px auto;
+      padding: 0 20px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 32px 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .card-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-badge">🚀 v2.0 Just Released</div>
+    <h1>The Future of Cloud Development</h1>
+    <p>Supercharge your workflow with AI-driven seamless synergistic solutions designed for hyper-scale teams.</p>
+    <button class="cta-btn">Get Started Free &rarr;</button>
+  </div>
+
+  <div class="features-section">
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">⚡️</div>
+        <h3>Lightning Fast</h3>
+        <p>Deploy in milliseconds with our edge-optimized serverless pipeline infrastructure.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <h3>Bank-Grade Security</h3>
+        <p>Enterprise SOC2 compliance out of the box with end-to-end military encryption.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h3>Infinite Scale</h3>
+        <p>Automatically scale from zero to billions of requests without touching a config.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

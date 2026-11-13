@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Audio — Dark Dense Listening</title>
+  <style>
+    :root {
+      --bg-base: #09090b;
+      --bg-surface: #121215;
+      --bg-card: #18181b;
+      --bg-card-hover: #222226;
+      --border: #27272a;
+      --border-subtle: #1f1f23;
+      --text-primary: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --accent: #10b981;
+      --accent-muted: rgba(16, 185, 129, 0.15);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.4;
+      height: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr 82px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      height: calc(100vh - 82px);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      overflow-y: auto;
+    }
+
+    .brand-mark {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .nav-group-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+      padding-left: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.14s ease;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: var(--text-primary);
+      background: var(--bg-card);
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+    }
+
+    /* Main Content Area */
+    .content-area {
+      overflow-y: auto;
+      padding: 32px 40px;
+      background: radial-gradient(circle at 10% 0%, #15181a 0%, var(--bg-base) 45%);
+    }
+
+    .album-header {
+      display: flex;
+      gap: 32px;
+      align-items: flex-end;
+      margin-bottom: 36px;
+    }
+
+    .album-art {
+      width: 176px;
+      height: 176px;
+      background: #181d22;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .album-meta-type {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .album-title {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .album-subtext {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge-hi-res {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--text-tertiary);
+    }
+
+    /* Tracklist Table */
+    .tracklist {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .tracklist thead th {
+      color: var(--text-tertiary);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .tracklist tbody tr {
+      transition: background-color 0.12s ease;
+      cursor: pointer;
+    }
+
+    .tracklist tbody tr:hover {
+      background-color: var(--bg-card);
+    }
+
+    .tracklist tbody tr.playing {
+      background-color: var(--accent-muted);
+    }
+
+    .tracklist tbody tr.playing .col-title {
+      color: var(--accent);
+    }
+
+    .tracklist td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+    }
+
+    .col-num {
+      width: 44px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .col-title {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .col-artist {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+
+    .col-duration {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      width: 70px;
+    }
+
+    /* Bottom Player Bar */
+    .player-dock {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 280px 1fr 280px;
+      align-items: center;
+      height: 82px;
+    }
+
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .now-thumb {
+      width: 48px;
+      height: 48px;
+      background: #181d22;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .now-info {
+      overflow: hidden;
+    }
+
+    .now-track {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .now-artist {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .playback-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .control-buttons {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 50%;
+      transition: color 0.14s ease;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .play-circle {
+      background: var(--text-primary);
+      color: var(--bg-base);
+      width: 32px;
+      height: 32px;
+    }
+
+    .play-circle:hover {
+      background: white;
+      transform: scale(1.04);
+    }
+
+    .timeline-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .time-stamp {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-tertiary);
+      width: 36px;
+    }
+
+    .time-stamp.right {
+      text-align: right;
+    }
+
+    .scrubber {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .scrubber-fill {
+      width: 42%;
+      height: 100%;
+      background: var(--text-primary);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .scrubber:hover .scrubber-fill {
+      background: var(--accent);
+    }
+
+    .volume-dock {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .volume-bar {
+      width: 90px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .volume-fill {
+      width: 70%;
+      height: 100%;
+      background: var(--text-secondary);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-mark">
+        <div class="brand-dot"></div>
+        <span>Aura Audio &middot; High Fidelity</span>
+      </div>
+
+      <div>
+        <div class="nav-group-title">Library</div>
+        <ul class="nav-list">
+          <li><a href="#" class="nav-item active">Heavy Rotation</a></li>
+          <li><a href="#" class="nav-item">Liked Recordings</a></li>
+          <li><a href="#" class="nav-item">Recent Downloads</a></li>
+          <li><a href="#" class="nav-item">Archived Sessions</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="nav-group-title">Collections</div>
+        <ul class="nav-list">
+          <li><a href="#" class="nav-item">Nordic Ambient 2026</a></li>
+          <li><a href="#" class="nav-item">Modular Synth Sketches</a></li>
+          <li><a href="#" class="nav-item">Late Night Mastering</a></li>
+          <li><a href="#" class="nav-item">Analog Acoustic Field</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="content-area">
+      <div class="album-header">
+        <div class="album-art">
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="#3f3f46" stroke-width="1.5">
+            <circle cx="50" cy="50" r="42"/>
+            <circle cx="50" cy="50" r="28"/>
+            <circle cx="50" cy="50" r="14"/>
+            <circle cx="50" cy="50" r="4" fill="#3f3f46"/>
+          </svg>
+        </div>
+        <div class="album-info">
+          <div class="album-meta-type">Master Tape Archive</div>
+          <h1 class="album-title">Subharmonic Frequencies Vol. II</h1>
+          <div class="album-subtext">
+            <span>By K. Vane &amp; Ensemble</span>
+            <span>&bull;</span>
+            <span>2026 &bull; 8 tracks, 46 min</span>
+            <span class="badge-hi-res">FLAC 96kHz / 24-bit</span>
+          </div>
+        </div>
+      </div>
+
+      <table class="tracklist">
+        <thead>
+          <tr>
+            <th class="col-num">#</th>
+            <th>Title</th>
+            <th>Album</th>
+            <th>Format</th>
+            <th class="col-duration">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="playing">
+            <td class="col-num">01</td>
+            <td>
+              <div class="col-title">Oscillation in C Minor</div>
+              <div class="col-artist">K. Vane</div>
+            </td>
+            <td>Subharmonic Frequencies Vol. II</td>
+            <td>Direct Stream Digital</td>
+            <td class="col-duration">05:42</td>
+          </tr>
+          <tr>
+            <td class="col-num">02</td>
+            <td>
+              <div class="col-title">Low Velocity Resonance</div>
+              <div class="col-artist">K. Vane, Mira Chen</div>
+            </td>
+            <td>Subharmonic Frequencies Vol. II</td>
+            <td>PCM Master</td>
+            <td class="col-duration">04:18</td>
+          </tr>
+          <tr>
+            <td class="col-num">03</td>
+            <td>
+              <div class="col-title">Permafrost Overtones</div>
+              <div class="col-artist">K. Vane</div>
+            </td>
+            <td>Subharmonic Frequencies Vol. II</td>
+            <td>FLAC Lossless</td>
+            <td class="col-duration">06:05</td>
+          </tr>
+          <tr>
+            <td class="col-num">04</td>
+            <td>
+              <div class="col-title">Reverberation Corridor</div>
+              <div class="col-artist">K. Vane</div>
+            </td>
+            <td>Subharmonic Frequencies Vol. II</td>
+            <td>PCM Master</td>
+            <td class="col-duration">03:51</td>
+          </tr>
+          <tr>
+            <td class="col-num">05</td>
+            <td>
+              <div class="col-title">Static Dissipation</div>
+              <div class="col-artist">K. Vane, T. Althaus</div>
+            </td>
+            <td>Subharmonic Frequencies Vol. II</td>
+            <td>Direct Stream Digital</td>
+            <td class="col-duration">07:22</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <footer class="player-dock">
+    <div class="now-playing">
+      <div class="now-thumb">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#52525b" stroke-width="1.2">
+          <circle cx="24" cy="24" r="18"/>
+          <circle cx="24" cy="24" r="6" fill="#52525b"/>
+        </svg>
+      </div>
+      <div class="now-info">
+        <div class="now-track">Oscillation in C Minor</div>
+        <div class="now-artist">K. Vane &middot; Subharmonic Frequencies</div>
+      </div>
+    </div>
+
+    <div class="playback-controls">
+      <div class="control-buttons">
+        <button class="icon-btn" title="Shuffle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+          </svg>
+        </button>
+        <button class="icon-btn" title="Previous">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line>
+          </svg>
+        </button>
+        <button class="icon-btn play-circle" title="Play">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
+        </button>
+        <button class="icon-btn" title="Next">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line>
+          </svg>
+        </button>
+        <button class="icon-btn" title="Repeat">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="timeline-bar">
+        <span class="time-stamp">02:24</span>
+        <div class="scrubber">
+          <div class="scrubber-fill"></div>
+        </div>
+        <span class="time-stamp right">05:42</span>
+      </div>
+    </div>
+
+    <div class="volume-dock">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-tertiary);">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+      <div class="volume-bar">
+        <div class="volume-fill"></div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

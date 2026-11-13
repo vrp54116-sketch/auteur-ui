@@ -1,0 +1,18 @@
+id: editorial-journal
+prompt: "Build a photo journal and editorial reading app."
+stack: "html, css, js"
+viewport:
+  width: 1440
+  height: 900
+success_criteria:
+  - "Curated article or photo essay layout with prominent photography and captions"
+  - "Asymmetric editorial grid with thoughtful typographic hierarchy"
+  - "High readability editorial type scale (serif or refined sans) with generous margins"
+  - "Issue or edition index and reading time metadata"
+  - "Subtle, refined pagination or next story transition"
+forbidden_patterns:
+  - "Dashboard sidebar with metric widgets"
+  - "Cookie-cutter 3-column card grid with uniform 8px radius"
+  - "Inter-only default font with purple accent colors"
+  - "Emoji decorative badges"
+  - "Noisy animated gradients"

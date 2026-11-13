@@ -1,0 +1,18 @@
+id: settings-billing
+prompt: "Build a settings and billing page for a SaaS."
+stack: "html, css, js"
+viewport:
+  width: 1440
+  height: 900
+success_criteria:
+  - "Current plan tier overview with seat/resource usage meter and upgrade CTA"
+  - "Payment method management card and download-ready billing/invoice history table"
+  - "Team member list with role selection and invitation actions"
+  - "Sectional settings navigation (General, Billing, Team, Security, API Keys)"
+  - "Clear form validation states and destructive action confirmations"
+forbidden_patterns:
+  - "Promotional marketing hero banner"
+  - "Purple mesh gradient header"
+  - "Three identical marketing pricing cards instead of account settings"
+  - "Emoji labels for form fields"
+  - "Unorganized single-column endless form without logical grouping"

@@ -1,0 +1,185 @@
+{
+  "generatedAt": "2026-11-13T09:35:12.593Z",
+  "comparisons": [
+    {
+      "comparisonId": "COMP-1",
+      "group": "analytics-dashboard-s1",
+      "taskId": "analytics-dashboard",
+      "seed": 1,
+      "optionA": {
+        "blindId": "COMP-1-A",
+        "trueRunId": "baseline-analytics-dashboard-seed1",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-2",
+      "group": "analytics-dashboard-s2",
+      "taskId": "analytics-dashboard",
+      "seed": 2,
+      "optionA": {
+        "blindId": "COMP-2-A",
+        "trueRunId": "baseline-analytics-dashboard-seed2",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-3",
+      "group": "analytics-dashboard-s3",
+      "taskId": "analytics-dashboard",
+      "seed": 3,
+      "optionA": {
+        "blindId": "COMP-3-A",
+        "trueRunId": "baseline-analytics-dashboard-seed3",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-4",
+      "group": "editorial-journal-s1",
+      "taskId": "editorial-journal",
+      "seed": 1,
+      "optionA": {
+        "blindId": "COMP-4-A",
+        "trueRunId": "baseline-editorial-journal-seed1",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-5",
+      "group": "editorial-journal-s2",
+      "taskId": "editorial-journal",
+      "seed": 2,
+      "optionA": {
+        "blindId": "COMP-5-A",
+        "trueRunId": "baseline-editorial-journal-seed2",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-6",
+      "group": "editorial-journal-s3",
+      "taskId": "editorial-journal",
+      "seed": 3,
+      "optionA": {
+        "blindId": "COMP-6-A",
+        "trueRunId": "baseline-editorial-journal-seed3",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-7",
+      "group": "oss-landing-s1",
+      "taskId": "oss-landing",
+      "seed": 1,
+      "optionA": {
+        "blindId": "COMP-7-A",
+        "trueRunId": "baseline-oss-landing-seed1",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-8",
+      "group": "oss-landing-s2",
+      "taskId": "oss-landing",
+      "seed": 2,
+      "optionA": {
+        "blindId": "COMP-8-A",
+        "trueRunId": "baseline-oss-landing-seed2",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-9",
+      "group": "oss-landing-s3",
+      "taskId": "oss-landing",
+      "seed": 3,
+      "optionA": {
+        "blindId": "COMP-9-A",
+        "trueRunId": "baseline-oss-landing-seed3",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-10",
+      "group": "settings-billing-s1",
+      "taskId": "settings-billing",
+      "seed": 1,
+      "optionA": {
+        "blindId": "COMP-10-A",
+        "trueRunId": "baseline-settings-billing-seed1",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-11",
+      "group": "settings-billing-s2",
+      "taskId": "settings-billing",
+      "seed": 2,
+      "optionA": {
+        "blindId": "COMP-11-A",
+        "trueRunId": "baseline-settings-billing-seed2",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-12",
+      "group": "settings-billing-s3",
+      "taskId": "settings-billing",
+      "seed": 3,
+      "optionA": {
+        "blindId": "COMP-12-A",
+        "trueRunId": "baseline-settings-billing-seed3",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-13",
+      "group": "spotify-listening-s1",
+      "taskId": "spotify-listening",
+      "seed": 1,
+      "optionA": {
+        "blindId": "COMP-13-A",
+        "trueRunId": "baseline-spotify-listening-seed1",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-14",
+      "group": "spotify-listening-s2",
+      "taskId": "spotify-listening",
+      "seed": 2,
+      "optionA": {
+        "blindId": "COMP-14-A",
+        "trueRunId": "baseline-spotify-listening-seed2",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    },
+    {
+      "comparisonId": "COMP-15",
+      "group": "spotify-listening-s3",
+      "taskId": "spotify-listening",
+      "seed": 3,
+      "optionA": {
+        "blindId": "COMP-15-A",
+        "trueRunId": "baseline-spotify-listening-seed3",
+        "trueArm": "baseline"
+      },
+      "optionB": null
+    }
+  ]
+}

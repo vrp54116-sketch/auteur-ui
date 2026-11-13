@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Komorebi — Monograph 08: The Northern Prefectures</title>
+  <style>
+    :root {
+      --bg: #f9f8f5;
+      --surface: #f2eee8;
+      --text-main: #1c1a17;
+      --text-muted: #6e6a64;
+      --text-faint: #9c978f;
+      --accent: #2e3b2e;
+      --border: #e3ded5;
+      --font-serif: "Charter", "Georgia", "Cambria", "Times New Roman", serif;
+      --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-serif);
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .publication-mark {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    .issue-nav {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .issue-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.18s ease;
+    }
+
+    .issue-nav a:hover,
+    .issue-nav a.active {
+      color: var(--text-main);
+    }
+
+    main {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 72px 48px 120px 48px;
+    }
+
+    .editorial-hero {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 64px;
+      align-items: end;
+      margin-bottom: 88px;
+    }
+
+    .story-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .title-block h1 {
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      margin-bottom: 32px;
+    }
+
+    .standfirst {
+      font-size: 21px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      font-style: italic;
+      max-width: 540px;
+    }
+
+    .hero-photo-wrap {
+      position: relative;
+    }
+
+    .editorial-photo {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      display: block;
+      background: #3a403a;
+    }
+
+    .caption {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+    }
+
+    .asymmetric-spread {
+      display: grid;
+      grid-template-columns: 2fr 4fr 5fr 1fr;
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .marginalia {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      border-top: 1px solid var(--text-main);
+      padding-top: 16px;
+    }
+
+    .marginalia span {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-faint);
+      margin-bottom: 6px;
+    }
+
+    .prose-primary {
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text-main);
+    }
+
+    .prose-primary p + p {
+      margin-top: 24px;
+      text-indent: 1.5em;
+    }
+
+    .prose-primary p:first-of-type::first-letter {
+      font-size: 68px;
+      float: left;
+      line-height: 0.82;
+      padding-right: 12px;
+      padding-top: 4px;
+      font-family: var(--font-serif);
+    }
+
+    .photo-plate {
+      position: relative;
+    }
+
+    .photo-plate-inner {
+      height: 440px;
+      background: #2a2c30;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pull-quote {
+      margin: 48px 0;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-size: 28px;
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+      color: var(--accent);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 900px) {
+      .editorial-hero,
+      .asymmetric-spread {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .title-block h1 {
+        font-size: 42px;
+      }
+      header, main, footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="publication-mark">Komorebi &middot; Quarterly Photographic Studies</div>
+    <ul class="issue-nav">
+      <li><a href="#" class="active">08 &mdash; Aomori</a></li>
+      <li><a href="#">07 &mdash; Shikoku</a></li>
+      <li><a href="#">06 &mdash; Hokkaido</a></li>
+      <li><a href="#">Archive</a></li>
+    </ul>
+  </header>
+
+  <main>
+    <div class="editorial-hero">
+      <div class="title-block">
+        <div class="story-meta">
+          <span>Essay No. 42</span>
+          <span>&middot;</span>
+          <span>Field Notes: November</span>
+          <span>&middot;</span>
+          <span>12 Min Read</span>
+        </div>
+        <h1>The Stillness Before the Frost</h1>
+        <p class="standfirst">Tracing ancient cedar ridges and forgotten coastal waystations during the first sub-zero nights in Tsugaru.</p>
+      </div>
+
+      <div class="hero-photo-wrap">
+        <svg class="editorial-photo" viewBox="0 0 700 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mist" x1="0%" y1="0%" x2="40%" y2="100%">
+              <stop offset="0%" stop-color="#4a524a" />
+              <stop offset="60%" stop-color="#242824" />
+              <stop offset="100%" stop-color="#141714" />
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#mist)"/>
+          <path d="M 0 380 Q 200 310 400 350 T 700 290 L 700 520 L 0 520 Z" fill="#181c18" opacity="0.8"/>
+          <path d="M 0 440 Q 300 390 500 420 T 700 370 L 700 520 L 0 520 Z" fill="#0d100d"/>
+          <circle cx="530" cy="180" r="42" fill="#c4b89b" opacity="0.35"/>
+          <line x1="280" y1="280" x2="280" y2="460" stroke="#0d100d" stroke-width="4"/>
+          <line x1="310" y1="310" x2="310" y2="470" stroke="#0d100d" stroke-width="3"/>
+          <line x1="420" y1="290" x2="420" y2="480" stroke="#0d100d" stroke-width="5"/>
+        </svg>
+        <div class="caption">
+          <span>FIG. 08 &mdash; Mt. Iwaki foothills under dawn frost</span>
+          <span>40&deg;39'N 140&deg;18'E</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="asymmetric-spread">
+      <aside class="marginalia">
+        <span>Curator's Note</span>
+        Photographed on medium format tri-X monochrome and 800T cine-emulsion over 14 days of unassisted foot transit along the historic transit corridor.
+      </aside>
+
+      <div class="prose-primary">
+        <p>Winter arrives in the high valleys without ceremony. One afternoon the timber cutters are still hauling hinoki down the steep switchbacks above Hirosaki; by midnight, the temperature plummets twenty degrees and the vapor off the river freezes onto the bark before it touches the earth.</p>
+        <p>Walking the ridge road at dawn, sound travels with uncanny precision. The snap of a birch bough under snow three hundred yards below echoes against the shale face like an instrument struck in a vaulted hall. There are no visitors here in mid-November.</p>
+        
+        <div class="pull-quote">
+          &ldquo;Silence in the timber country is not an absence, but a dense and tactile substance.&rdquo;
+        </div>
+
+        <p>The shrines along this pass were constructed during the middle Edo period, positioned exactly at the boundary where the coastal gale breaks against the massif. Weathered zinc shingles have turned a dark verdigris, pinned with square hand-forged iron spikes that weep rust into the grain.</p>
+      </div>
+
+      <div class="photo-plate">
+        <div class="photo-plate-inner">
+          <svg width="100%" height="100%" viewBox="0 0 500 440" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#1f2321"/>
+            <polygon points="120,440 250,140 380,440" fill="#141816"/>
+            <rect x="235" y="100" width="30" height="40" fill="#c4b89b" opacity="0.25"/>
+            <line x1="80" y1="360" x2="420" y2="360" stroke="#363d38" stroke-width="1"/>
+            <line x1="100" y1="390" x2="400" y2="390" stroke="#363d38" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="caption">
+          <span>FIG. 09 &mdash; Shrine waypost roofline, Tsugaru Strait</span>
+          <span>Plate IV</span>
+        </div>
+      </div>
+
+      <div></div>
+    </div>
+  </main>
+
+  <footer>
+    <div>Volume IV &middot; Published Autumn 2026</div>
+    <div>Typeset in Charter &amp; SF Mono</div>
+  </footer>
+</body>
+</html>

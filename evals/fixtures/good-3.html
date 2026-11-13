@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synapse Observability — US-East Cluster Telemetry</title>
+  <style>
+    :root {
+      --bg: #0b0d13;
+      --surface: #121620;
+      --surface-elevated: #171d2b;
+      --border: #222a3d;
+      --border-subtle: #192030;
+      --text: #e2e8f0;
+      --text-muted: #8492a6;
+      --text-faint: #4c566a;
+      --cyan: #38bdf8;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.45;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .dashboard-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cluster-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    .cluster-id {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--surface-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .time-selector {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .time-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .time-btn.active {
+      background: var(--surface-elevated);
+      color: var(--text);
+    }
+
+    /* KPI Sparkline Row */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 124px;
+    }
+
+    .kpi-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-delta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .kpi-delta.pos { color: var(--emerald); }
+    .kpi-delta.neg { color: var(--rose); }
+
+    .sparkline {
+      width: 100px;
+      height: 36px;
+    }
+
+    /* Chart Section */
+    .analytics-split {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .chart-container {
+      height: 220px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Monospace Live Log Stream */
+    .log-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px 20px;
+    }
+
+    .log-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .log-table th {
+      text-align: left;
+      font-size: 11px;
+      color: var(--text-faint);
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .badge-200 { background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+    .badge-504 { background: rgba(244, 63, 94, 0.15); color: var(--rose); }
+    .badge-429 { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+
+    @media (max-width: 900px) {
+      .kpi-row { grid-template-columns: 1fr 1fr; }
+      .analytics-split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-grid">
+    <header>
+      <div class="cluster-status">
+        <div class="pulse-dot"></div>
+        <span class="cluster-id">prod-useast1-gateway</span>
+        <span class="tag">Release v4.12.0</span>
+        <span class="tag">Active Replicas: 32/32</span>
+      </div>
+
+      <div class="controls-bar">
+        <div class="time-selector">
+          <button class="time-btn">15m</button>
+          <button class="time-btn active">1h</button>
+          <button class="time-btn">6h</button>
+          <button class="time-btn">24h</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Throughput (Req / Sec)</div>
+        <div class="kpi-bottom">
+          <div>
+            <div class="kpi-value">48.2k</div>
+            <div class="kpi-delta pos">+4.1% vs prev hr</div>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 36">
+            <polyline fill="none" stroke="#38bdf8" stroke-width="1.8" points="0,28 15,22 30,26 45,16 60,19 75,8 90,12 100,6"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">p95 Ingress Latency</div>
+        <div class="kpi-bottom">
+          <div>
+            <div class="kpi-value">28.4ms</div>
+            <div class="kpi-delta pos">-1.2ms improvement</div>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 36">
+            <polyline fill="none" stroke="#10b981" stroke-width="1.8" points="0,14 20,18 40,12 60,15 80,10 100,8"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Error Rate (5xx)</div>
+        <div class="kpi-bottom">
+          <div>
+            <div class="kpi-value">0.012%</div>
+            <div class="kpi-delta neg">+0.003% transient spike</div>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 36">
+            <polyline fill="none" stroke="#f43f5e" stroke-width="1.8" points="0,32 25,31 50,32 70,8 85,28 100,30"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Memory Utilization</div>
+        <div class="kpi-bottom">
+          <div>
+            <div class="kpi-value">62.8%</div>
+            <div class="kpi-delta pos">Nominal heap limits</div>
+          </div>
+          <svg class="sparkline" viewBox="0 0 100 36">
+            <polyline fill="none" stroke="#8492a6" stroke-width="1.8" points="0,18 20,20 40,19 60,17 80,18 100,16"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="analytics-split">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Throughput &amp; Response Distribution</div>
+          <span class="tag">Telemetry Interval: 5s</span>
+        </div>
+        <div class="chart-container">
+          <svg width="100%" height="100%" viewBox="0 0 700 220" preserveAspectRatio="none">
+            <line x1="0" y1="40" x2="700" y2="40" stroke="#192030" stroke-width="1"/>
+            <line x1="0" y1="90" x2="700" y2="90" stroke="#192030" stroke-width="1"/>
+            <line x1="0" y1="140" x2="700" y2="140" stroke="#192030" stroke-width="1"/>
+            <line x1="0" y1="190" x2="700" y2="190" stroke="#192030" stroke-width="1"/>
+            
+            <path d="M 0 180 Q 120 160 220 140 T 440 100 T 600 130 T 700 80 L 700 210 L 0 210 Z" fill="rgba(56, 189, 248, 0.08)"/>
+            <path d="M 0 180 Q 120 160 220 140 T 440 100 T 600 130 T 700 80" fill="none" stroke="#38bdf8" stroke-width="2"/>
+            
+            <circle cx="440" cy="100" r="4" fill="#38bdf8"/>
+            <text x="450" y="96" fill="#8492a6" font-family="ui-monospace" font-size="11">49.4k rps</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Route Latency Breakdown</div>
+          <span class="tag">p99</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px;">
+              <span>/api/v2/ingest</span>
+              <span style="color: var(--cyan);">14.2ms</span>
+            </div>
+            <div style="background: var(--surface-elevated); height: 6px; border-radius: 3px; overflow: hidden;">
+              <div style="background: var(--cyan); width: 35%; height: 100%;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px;">
+              <span>/api/v2/query/timeseries</span>
+              <span style="color: var(--amber);">48.6ms</span>
+            </div>
+            <div style="background: var(--surface-elevated); height: 6px; border-radius: 3px; overflow: hidden;">
+              <div style="background: var(--amber); width: 72%; height: 100%;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px;">
+              <span>/auth/validate-token</span>
+              <span style="color: var(--emerald);">4.1ms</span>
+            </div>
+            <div style="background: var(--surface-elevated); height: 6px; border-radius: 3px; overflow: hidden;">
+              <div style="background: var(--emerald); width: 12%; height: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="log-panel">
+      <div class="panel-header">
+        <div class="panel-title">Live Edge Event Stream</div>
+        <span class="tag">Streaming 100 lines/s</span>
+      </div>
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Status</th>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Latency</th>
+            <th>Origin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>14:28:44.812</td>
+            <td><span class="status-badge badge-200">200 OK</span></td>
+            <td>POST</td>
+            <td>/api/v2/telemetry/batch</td>
+            <td>18.4ms</td>
+            <td>198.51.100.42</td>
+          </tr>
+          <tr>
+            <td>14:28:44.790</td>
+            <td><span class="status-badge badge-200">200 OK</span></td>
+            <td>GET</td>
+            <td>/healthz</td>
+            <td>0.8ms</td>
+            <td>10.0.4.12</td>
+          </tr>
+          <tr>
+            <td>14:28:44.640</td>
+            <td><span class="status-badge badge-429">429 TOO_MANY</span></td>
+            <td>POST</td>
+            <td>/api/v2/sync</td>
+            <td>2.1ms</td>
+            <td>203.0.113.88</td>
+          </tr>
+          <tr>
+            <td>14:28:44.310</td>
+            <td><span class="status-badge badge-504">504 TIMEOUT</span></td>
+            <td>POST</td>
+            <td>/api/v2/analytics/export</td>
+            <td>5001.2ms</td>
+            <td>192.0.2.14</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+id: spotify-listening
+prompt: "Build a music listening app like Spotify."
+stack: "html, css, js"
+viewport:
+  width: 1440
+  height: 900
+success_criteria:
+  - "Now playing persistent bar with playback controls, timeline scrubber, and volume control"
+  - "Left navigation / library sidebar for playlists, artists, and liked songs"
+  - "Tracklist table displaying track title, artist, album, date added, and duration"
+  - "Responsive layout scaling down to mobile viewports"
+  - "Dark theme optimized for long listening sessions"
+forbidden_patterns:
+  - "Generic purple/indigo mesh gradient background"
+  - "Three identical floating feature cards"
+  - "Emoji icons in place of proper UI controls"
+  - "Uniform 8px border radius on all elements"
+  - "Centered marketing hero section with CTA button"
