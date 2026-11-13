@@ -536,3 +536,116 @@ npx auteur-ui lint --json --html evals/fixtures/slop-1.html
       Tests  69 passed (69)
    Duration  2.47s
 ```
+
+
+## Phase 6: Real Assets (Motion, Procedural Sound, Layered CSS, and Typography Pairings)
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`code/motion/` — 8 Zero-Dependency Motion Primitives**:
+   - Native Web Animations API (WAAPI) implementations: `reveal-on-scroll.mjs` (IntersectionObserver), `stagger-list.mjs`, `spring-sheet.mjs`, `flip.mjs` (FLIP layout transitions), `magnetic-hover.mjs`, `page-transition.mjs`, `number-ticker.mjs`, and `skeleton-crossfade.mjs`.
+   - Framework-agnostic vanilla ESM modules + React hooks in `code/motion/react/` (`useRevealOnScroll`, `useStaggerList`, `useSpringSheet`, `useFlip`, `useMagneticHover`, `usePageTransition`, `useNumberTicker`, `useSkeletonCrossfade`), plus optional `motion/react` spring-sheet component.
+   - Every file strictly `< 120 lines`.
+   - Every primitive directly consumes contract CSS variables (`--dur-1`, `--dur-2`, `--dur-3`, `--ease`, `--stagger`, `--spring-bounce`) and enforces `prefers-reduced-motion` instantaneous completion / bypass.
+2. **`code/motion/personalities.json`**:
+   - Strictly structured, machine-readable JSON mapping `restrained`, `editorial`, `kinetic`, and `playful` to concrete numeric values for duration, easing, stagger, and spring bounce (zero prose).
+3. **`code/sound/` — Procedural WebAudio Synthesis Kits**:
+   - 4 procedural kits with ZERO binary audio files: `soft-mechanical.mjs`, `glass.mjs`, `analog-tape.mjs`, and `minimal-click.mjs`.
+   - Procedural synthesis engine in `voice.mjs` (mathematical sine/square/triangle oscillators and filtered brownian noise buffers with exponential decay envelopes).
+   - Single shared `AudioContext` architecture in `initSound.mjs`: unlock on first gesture (`pointerdown`, `keydown`), master gain control, 60ms anti-machine-gun throttling, persisted toggle (`auteur-ui.sound`), muted by default, and `prefers-reduced-motion` sensory-reduction proxy.
+   - Full React integration via `useUISound.js`.
+4. **`code/css/` — Layered CSS & Tailwind v4 Theme**:
+   - Explicit CSS `@layer reset, tokens, type, rhythm, focus, motion, elevation;` architecture in `code/css/index.css`.
+   - Discrete layer files: `reset.css`, `tokens.css`, `type.css`, `rhythm.css`, `focus.css`, `motion.css`, `elevation.css`.
+   - Native Tailwind CSS v4 `@theme` configuration in `tailwind-theme.css`.
+5. **`code/type/` — 12 Real OFL Font Pairings**:
+   - 12 authentic SIL Open Font License 1.1 font pairings in `pairings.json` verified on Google Fonts.
+   - Variable axis configurations (`opsz`, `wght`, `wdth`, `ital`, `SOFT`, `WONK`) and optical sizing specifications.
+   - Fluid `clamp()` scale variables (`--text-xs` through `--text-5xl`) in `scales.css`.
+   - Self-hostable and CDN `@font-face` definitions in `font-face.css`.
+   - Ready-to-use `next/font/google` loader configurations in `next-font.js`.
+6. **`examples/kitchen-sink.html`**:
+   - Complete interactive demonstration page showcasing all 8 motion primitives, live personality switching, procedural sound triggers, typography scales, and CSS layer integration.
+7. **`tests/` — Automated Playwright & Vitest Verification**:
+   - `tests/motion.spec.ts`: Headless Playwright test asserting computed CSS transforms at $t=0$ and $t=\text{mid}$ for all 8 motion primitives, and verifying that `prefers-reduced-motion` immediately disables transforms and animations.
+   - `tests/sound.spec.ts`: Unit tests verifying AudioContext node graph building across all kits, 60ms throttling, mute persistence, gesture unlocking, and sensory-reduction bypass.
+   - `tests/type-pairings.spec.ts`: Tests validating all 12 OFL pairings, fluid clamp scale equations, and Next.js font exports.
+8. **`SOURCES.md`**:
+   - Attribution records for all 22 open-source font families and procedural WebAudio synthesis modules.
+
+---
+
+### Acceptance Command Run: `pnpm test`
+```bash
+pnpm test
+```
+
+### Actual Output:
+```
+$ vitest run
+
+ RUN  v5.1.0 /Users/vanshpatel/Desktop/auteur-ui
+
+ ✓ tests/sound.spec.ts (5 tests) 3ms
+ ✓ tests/lint/type.spec.ts (5 tests) 8ms
+ ✓ tests/type-pairings.spec.ts (4 tests) 8ms
+ ✓ tests/lint/hierarchy.spec.ts (4 tests) 4ms
+ ✓ tests/lint/color.spec.ts (4 tests) 2ms
+ ✓ tests/lint/slop.spec.ts (7 tests) 8ms
+ ✓ tests/contract.test.ts (3 tests) 11ms
+ ✓ tests/router.spec.ts (5 tests) 11ms
+ ✓ tests/looks.test.ts (17 tests) 24ms
+ ✓ tests/lint/rhythm.spec.ts (2 tests) 3ms
+ ✓ tests/lint/responsive.spec.ts (2 tests) 3ms
+ ✓ tests/lint/a11y.spec.ts (4 tests) 2ms
+ ✓ tests/lint/motion.spec.ts (4 tests) 4ms
+ ✓ tests/lint/space.spec.ts (2 tests) 2ms
+ ✓ tests/preview.spec.ts (4 tests) 1806ms
+ ✓ tests/lint/fixtures.spec.ts (6 tests) 2080ms
+ ✓ tests/motion.spec.ts (2 tests) 287ms
+
+ Test Files  17 passed (17)
+      Tests  80 passed (80)
+   Duration  2.52s
+```
+
+---
+
+### Acceptance Command Run: `pnpm budget`
+```bash
+pnpm budget
+```
+
+### Actual Output:
+```
+$ tsc && node dist/scripts/budget.js
+
+======================================================
+   auteur-ui Token Budget Audit
+======================================================
+
+Target                                Tokens   Limit    Status
+--------------------------------------------------------------
+looks/index.json manifest                404     600    ✓ PASS
+contract summary: kinetic-pop            278     300    ✓ PASS
+contract summary: nocturne-editorial     281     300    ✓ PASS
+contract summary: paper-editorial        287     300    ✓ PASS
+contract summary: swiss-utility          246     300    ✓ PASS
+contract summary: terminal-luxe          263     300    ✓ PASS
+directions output (5 directions)         365     400    ✓ PASS
+skill/SKILL.md router                    422     500    ✓ PASS
+skill/commands/auteur-ui.md              111     120    ✓ PASS
+--------------------------------------------------------------
+All token budget invariants satisfied.
+```
+
+---
+
+### Token & Quality Measurements
+- **Total Test Files**: 17 passed (17)
+- **Total Tests**: 80 passed (80)
+- **WAAPI Motion Primitives**: 8/8 verified with computed transform sampling ($t=0$ vs $t=\text{mid}$) and reduced-motion zero-animation assertion.
+- **Procedural Sound Kits**: 4 kits, 0 audio binary files, 100% synthesized in WebAudio.
+- **Font Pairings**: 12 pairings, 100% SIL OFL 1.1 compliant.

@@ -143,3 +143,4 @@ export interface Rule {
   description: string;
   check(ctx: RuleContext): RuleViolation[];
 }
+

@@ -1,0 +1,386 @@
+[
+  {
+    "id": "nocturne-editorial",
+    "name": "Nocturne Editorial",
+    "category": "Literary Editorial",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Newsreader",
+      "googleSlug": "Newsreader",
+      "variable": true,
+      "opticalSizing": [6, 72],
+      "axes": { "opsz": [6, 72], "wght": [200, 800], "ital": [0, 1] }
+    },
+    "body": {
+      "family": "Source Serif 4",
+      "googleSlug": "Source+Serif+4",
+      "variable": true,
+      "opticalSizing": [8, 60],
+      "axes": { "opsz": [8, 60], "wght": [200, 900], "ital": [0, 1] }
+    },
+    "mono": {
+      "family": "JetBrains Mono",
+      "googleSlug": "JetBrains+Mono",
+      "variable": true,
+      "axes": { "wght": [100, 800] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.96rem + 0.22vw, 1.0625rem)",
+      "textLg": "clamp(1.125rem, 1.05rem + 0.38vw, 1.25rem)",
+      "textXl": "clamp(1.25rem, 1.15rem + 0.52vw, 1.5rem)",
+      "text2xl": "clamp(1.5rem, 1.35rem + 0.8vw, 2rem)",
+      "text3xl": "clamp(1.875rem, 1.625rem + 1.25vw, 2.5rem)",
+      "text4xl": "clamp(2.25rem, 1.875rem + 1.85vw, 3.25rem)",
+      "text5xl": "clamp(2.75rem, 2.2rem + 2.75vw, 4.25rem)"
+    }
+  },
+  {
+    "id": "fraunces-inter",
+    "name": "Warm Modernist",
+    "category": "Warm Display + Neutral Grotesk",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Fraunces",
+      "googleSlug": "Fraunces",
+      "variable": true,
+      "opticalSizing": [9, 144],
+      "axes": { "opsz": [9, 144], "wght": [100, 900], "SOFT": [0, 100], "WONK": [0, 1] }
+    },
+    "body": {
+      "family": "Inter",
+      "googleSlug": "Inter",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [100, 900] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.73rem + 0.12vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.97rem + 0.2vw, 1.0625rem)",
+      "textLg": "clamp(1.125rem, 1.06rem + 0.35vw, 1.25rem)",
+      "textXl": "clamp(1.25rem, 1.16rem + 0.5vw, 1.5rem)",
+      "text2xl": "clamp(1.5rem, 1.36rem + 0.78vw, 2rem)",
+      "text3xl": "clamp(1.875rem, 1.65rem + 1.2vw, 2.5rem)",
+      "text4xl": "clamp(2.25rem, 1.9rem + 1.8vw, 3.25rem)",
+      "text5xl": "clamp(2.75rem, 2.25rem + 2.7vw, 4.25rem)"
+    }
+  },
+  {
+    "id": "cormorant-proza",
+    "name": "Classical Humanist",
+    "category": "High-Contrast Renaissance",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Cormorant Garamond",
+      "googleSlug": "Cormorant+Garamond",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [300, 700], "ital": [0, 1] }
+    },
+    "body": {
+      "family": "Proza Libre",
+      "googleSlug": "Proza+Libre",
+      "variable": false,
+      "opticalSizing": false,
+      "axes": { "wght": [400, 800] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.95rem + 0.25vw, 1.075rem)",
+      "textLg": "clamp(1.15rem, 1.07rem + 0.4vw, 1.3rem)",
+      "textXl": "clamp(1.3rem, 1.18rem + 0.6vw, 1.6rem)",
+      "text2xl": "clamp(1.6rem, 1.4rem + 0.95vw, 2.15rem)",
+      "text3xl": "clamp(2rem, 1.7rem + 1.4vw, 2.75rem)",
+      "text4xl": "clamp(2.45rem, 2rem + 2.1vw, 3.6rem)",
+      "text5xl": "clamp(3rem, 2.4rem + 3vw, 4.75rem)"
+    }
+  },
+  {
+    "id": "syne-jakarta",
+    "name": "Kinetic Neo-Brutalist",
+    "category": "Experimental Display + UI Sans",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Syne",
+      "googleSlug": "Syne",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [400, 800] }
+    },
+    "body": {
+      "family": "Plus Jakarta Sans",
+      "googleSlug": "Plus+Jakarta+Sans",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [200, 800] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.96rem + 0.22vw, 1.0625rem)",
+      "textLg": "clamp(1.15rem, 1.06rem + 0.4vw, 1.275rem)",
+      "textXl": "clamp(1.3rem, 1.18rem + 0.6vw, 1.6rem)",
+      "text2xl": "clamp(1.65rem, 1.42rem + 1.1vw, 2.25rem)",
+      "text3xl": "clamp(2.1rem, 1.75rem + 1.65vw, 3rem)",
+      "text4xl": "clamp(2.65rem, 2.15rem + 2.4vw, 4rem)",
+      "text5xl": "clamp(3.3rem, 2.6rem + 3.4vw, 5.25rem)"
+    }
+  },
+  {
+    "id": "space-grotesk-mono",
+    "name": "Technical Retro-Futurist",
+    "category": "Tech Display + Fixed Width",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Space Grotesk",
+      "googleSlug": "Space+Grotesk",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [300, 700] }
+    },
+    "body": {
+      "family": "Space Mono",
+      "googleSlug": "Space+Mono",
+      "variable": false,
+      "opticalSizing": false,
+      "axes": { "wght": [400, 700] }
+    },
+    "scale": {
+      "textXs": "clamp(0.725rem, 0.7rem + 0.12vw, 0.775rem)",
+      "textSm": "clamp(0.825rem, 0.8rem + 0.14vw, 0.875rem)",
+      "textBase": "clamp(0.95rem, 0.92rem + 0.18vw, 1rem)",
+      "textLg": "clamp(1.1rem, 1.04rem + 0.32vw, 1.2rem)",
+      "textXl": "clamp(1.225rem, 1.14rem + 0.45vw, 1.45rem)",
+      "text2xl": "clamp(1.45rem, 1.32rem + 0.72vw, 1.85rem)",
+      "text3xl": "clamp(1.75rem, 1.55rem + 1.1vw, 2.35rem)",
+      "text4xl": "clamp(2.15rem, 1.85rem + 1.6vw, 3rem)",
+      "text5xl": "clamp(2.6rem, 2.15rem + 2.3vw, 3.85rem)"
+    }
+  },
+  {
+    "id": "dm-serif-sans",
+    "name": "Refined Editorial Contrast",
+    "category": "Editorial Serif + Low-Contrast Sans",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "DM Serif Display",
+      "googleSlug": "DM+Serif+Display",
+      "variable": false,
+      "opticalSizing": false,
+      "axes": { "wght": [400] }
+    },
+    "body": {
+      "family": "DM Sans",
+      "googleSlug": "DM+Sans",
+      "variable": true,
+      "opticalSizing": [9, 40],
+      "axes": { "opsz": [9, 40], "wght": [100, 1000] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.96rem + 0.22vw, 1.0625rem)",
+      "textLg": "clamp(1.125rem, 1.05rem + 0.38vw, 1.25rem)",
+      "textXl": "clamp(1.25rem, 1.15rem + 0.52vw, 1.5rem)",
+      "text2xl": "clamp(1.5rem, 1.35rem + 0.8vw, 2rem)",
+      "text3xl": "clamp(1.875rem, 1.625rem + 1.25vw, 2.5rem)",
+      "text4xl": "clamp(2.25rem, 1.875rem + 1.85vw, 3.25rem)",
+      "text5xl": "clamp(2.75rem, 2.2rem + 2.75vw, 4.25rem)"
+    }
+  },
+  {
+    "id": "playfair-source-sans",
+    "name": "Luxury Editorial",
+    "category": "High-Contrast Serif + Crisp Sans",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Playfair Display",
+      "googleSlug": "Playfair+Display",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [400, 900] }
+    },
+    "body": {
+      "family": "Source Sans 3",
+      "googleSlug": "Source+Sans+3",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [200, 900] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.96rem + 0.22vw, 1.0625rem)",
+      "textLg": "clamp(1.15rem, 1.06rem + 0.4vw, 1.275rem)",
+      "textXl": "clamp(1.3rem, 1.17rem + 0.58vw, 1.55rem)",
+      "text2xl": "clamp(1.55rem, 1.38rem + 0.85vw, 2.1rem)",
+      "text3xl": "clamp(1.95rem, 1.68rem + 1.32vw, 2.65rem)",
+      "text4xl": "clamp(2.4rem, 1.95rem + 2.05vw, 3.5rem)",
+      "text5xl": "clamp(3rem, 2.35rem + 3.1vw, 4.65rem)"
+    }
+  },
+  {
+    "id": "outfit-jakarta",
+    "name": "Modern Geometric Product",
+    "category": "Geometric UI Sans",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Outfit",
+      "googleSlug": "Outfit",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [100, 900] }
+    },
+    "body": {
+      "family": "Plus Jakarta Sans",
+      "googleSlug": "Plus+Jakarta+Sans",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [200, 800] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.73rem + 0.12vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.97rem + 0.2vw, 1.0625rem)",
+      "textLg": "clamp(1.125rem, 1.06rem + 0.35vw, 1.25rem)",
+      "textXl": "clamp(1.25rem, 1.16rem + 0.5vw, 1.5rem)",
+      "text2xl": "clamp(1.5rem, 1.36rem + 0.78vw, 2rem)",
+      "text3xl": "clamp(1.875rem, 1.65rem + 1.2vw, 2.5rem)",
+      "text4xl": "clamp(2.25rem, 1.9rem + 1.8vw, 3.25rem)",
+      "text5xl": "clamp(2.75rem, 2.25rem + 2.7vw, 4.25rem)"
+    }
+  },
+  {
+    "id": "bricolage-inter",
+    "name": "Contemporary Quirky Grotesk",
+    "category": "Expressive Display + Precision Neutral",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Bricolage Grotesque",
+      "googleSlug": "Bricolage+Grotesque",
+      "variable": true,
+      "opticalSizing": [12, 96],
+      "axes": { "opsz": [12, 96], "wdth": [75, 100], "wght": [200, 800] }
+    },
+    "body": {
+      "family": "Inter",
+      "googleSlug": "Inter",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [100, 900] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.96rem + 0.22vw, 1.0625rem)",
+      "textLg": "clamp(1.15rem, 1.06rem + 0.4vw, 1.275rem)",
+      "textXl": "clamp(1.3rem, 1.18rem + 0.6vw, 1.6rem)",
+      "text2xl": "clamp(1.6rem, 1.38rem + 1vw, 2.2rem)",
+      "text3xl": "clamp(2rem, 1.68rem + 1.5vw, 2.85rem)",
+      "text4xl": "clamp(2.5rem, 2.05rem + 2.25vw, 3.75rem)",
+      "text5xl": "clamp(3.15rem, 2.5rem + 3.2vw, 4.85rem)"
+    }
+  },
+  {
+    "id": "instrument-serif-sans",
+    "name": "Modernist Studio",
+    "category": "Chic Editorial Serif + Clean Grotesk",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Instrument Serif",
+      "googleSlug": "Instrument+Serif",
+      "variable": false,
+      "opticalSizing": false,
+      "axes": { "wght": [400], "ital": [0, 1] }
+    },
+    "body": {
+      "family": "Instrument Sans",
+      "googleSlug": "Instrument+Sans",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wdth": [75, 100], "wght": [400, 700] }
+    },
+    "scale": {
+      "textXs": "clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem)",
+      "textSm": "clamp(0.875rem, 0.84rem + 0.18vw, 0.9375rem)",
+      "textBase": "clamp(1rem, 0.96rem + 0.22vw, 1.0625rem)",
+      "textLg": "clamp(1.15rem, 1.06rem + 0.4vw, 1.28rem)",
+      "textXl": "clamp(1.325rem, 1.18rem + 0.65vw, 1.65rem)",
+      "text2xl": "clamp(1.65rem, 1.42rem + 1.05vw, 2.25rem)",
+      "text3xl": "clamp(2.1rem, 1.75rem + 1.6vw, 3rem)",
+      "text4xl": "clamp(2.65rem, 2.15rem + 2.35vw, 4.1rem)",
+      "text5xl": "clamp(3.35rem, 2.65rem + 3.4vw, 5.35rem)"
+    }
+  },
+  {
+    "id": "cinzel-garamond",
+    "name": "Architectural Monumental",
+    "category": "Inscriptional Roman + Literary Serif",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Cinzel",
+      "googleSlug": "Cinzel",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [400, 900] }
+    },
+    "body": {
+      "family": "EB Garamond",
+      "googleSlug": "EB+Garamond",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [400, 800], "ital": [0, 1] }
+    },
+    "scale": {
+      "textXs": "clamp(0.725rem, 0.7rem + 0.12vw, 0.785rem)",
+      "textSm": "clamp(0.85rem, 0.82rem + 0.15vw, 0.9125rem)",
+      "textBase": "clamp(0.975rem, 0.94rem + 0.2vw, 1.05rem)",
+      "textLg": "clamp(1.125rem, 1.05rem + 0.38vw, 1.25rem)",
+      "textXl": "clamp(1.25rem, 1.15rem + 0.52vw, 1.5rem)",
+      "text2xl": "clamp(1.5rem, 1.35rem + 0.8vw, 2rem)",
+      "text3xl": "clamp(1.875rem, 1.625rem + 1.25vw, 2.5rem)",
+      "text4xl": "clamp(2.25rem, 1.875rem + 1.85vw, 3.25rem)",
+      "text5xl": "clamp(2.75rem, 2.2rem + 2.75vw, 4.25rem)"
+    }
+  },
+  {
+    "id": "epilogue-jetbrains",
+    "name": "Industrial Developer",
+    "category": "Geometric Sans + Technical Mono",
+    "license": "SIL OFL 1.1",
+    "display": {
+      "family": "Epilogue",
+      "googleSlug": "Epilogue",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [100, 900], "ital": [0, 1] }
+    },
+    "body": {
+      "family": "JetBrains Mono",
+      "googleSlug": "JetBrains+Mono",
+      "variable": true,
+      "opticalSizing": false,
+      "axes": { "wght": [100, 800] }
+    },
+    "mono": {
+      "family": "JetBrains Mono",
+      "googleSlug": "JetBrains+Mono",
+      "variable": true,
+      "axes": { "wght": [100, 800] }
+    },
+    "scale": {
+      "textXs": "clamp(0.725rem, 0.7rem + 0.12vw, 0.775rem)",
+      "textSm": "clamp(0.825rem, 0.8rem + 0.14vw, 0.875rem)",
+      "textBase": "clamp(0.95rem, 0.92rem + 0.18vw, 1rem)",
+      "textLg": "clamp(1.1rem, 1.04rem + 0.32vw, 1.2rem)",
+      "textXl": "clamp(1.225rem, 1.14rem + 0.45vw, 1.45rem)",
+      "text2xl": "clamp(1.45rem, 1.32rem + 0.72vw, 1.85rem)",
+      "text3xl": "clamp(1.75rem, 1.55rem + 1.1vw, 2.35rem)",
+      "text4xl": "clamp(2.15rem, 1.85rem + 1.6vw, 3rem)",
+      "text5xl": "clamp(2.6rem, 2.15rem + 2.3vw, 3.85rem)"
+    }
+  }
+]

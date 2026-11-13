@@ -1,0 +1,26 @@
+{
+  "restrained": {
+    "dur": [120, 200, 320],
+    "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "stagger": 30,
+    "bounce": 0.12
+  },
+  "editorial": {
+    "dur": [180, 280, 450],
+    "ease": "cubic-bezier(0.25, 1, 0.5, 1)",
+    "stagger": 48,
+    "bounce": 0.18
+  },
+  "kinetic": {
+    "dur": [100, 180, 260],
+    "ease": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+    "stagger": 20,
+    "bounce": 0.35
+  },
+  "playful": {
+    "dur": [140, 240, 380],
+    "ease": "cubic-bezier(0.68, -0.6, 0.32, 1.6)",
+    "stagger": 36,
+    "bounce": 0.45
+  }
+}

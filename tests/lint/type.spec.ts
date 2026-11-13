@@ -143,3 +143,4 @@ describe('TYPE Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'type/text-wrap-balance')).toBe(false);
   });
 });
+

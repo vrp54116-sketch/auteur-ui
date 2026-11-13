@@ -133,3 +133,4 @@ describe('A11Y Rule Checks (Hard Fails)', () => {
     expect(violation?.isHardFail).toBe(true);
   });
 });
+

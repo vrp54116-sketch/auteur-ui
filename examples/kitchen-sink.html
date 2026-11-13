@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-kitchen-sink>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>auteur-ui — Kitchen Sink Demo</title>
+  <link rel="stylesheet" href="../code/css/index.css">
+  <link rel="stylesheet" href="../code/type/scales.css">
+  <style>
+    /* Demo utility styling built on layer tokens */
+    body {
+      background: var(--color-bg, #121212);
+      color: var(--color-text, #f0f0f0);
+      font-family: var(--font-text, sans-serif);
+      padding: var(--space-8);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--space-6);
+      margin-bottom: var(--space-8);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-6);
+      margin-bottom: var(--space-8);
+    }
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      overflow: hidden;
+      position: relative;
+    }
+    .controls {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    button, select {
+      background: var(--color-surface-hover);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-4);
+      cursor: pointer;
+    }
+    button:hover {
+      border-color: var(--color-accent);
+    }
+    .box {
+      width: 60px;
+      height: 60px;
+      background: var(--color-accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #000;
+    }
+    .stagger-container {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .stagger-item {
+      width: 48px;
+      height: 48px;
+      background: var(--color-surface-hover);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sheet-modal {
+      position: absolute;
+      inset: auto 0 0 0;
+      background: var(--color-surface-hover);
+      border-top: 2px solid var(--color-accent);
+      padding: var(--space-4);
+      transform: translateY(100%);
+      transition: none;
+    }
+    .page-box {
+      border: 1px dashed var(--color-border);
+      padding: var(--space-4);
+      border-radius: var(--radius-sm);
+    }
+    .sound-status {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>auteur-ui kitchen sink</h1>
+      <p style="color: var(--color-muted);">Deterministic motion, procedural audio synthesis, layered CSS, and OFL typography.</p>
+    </div>
+    <div class="controls">
+      <label for="personality-select">Personality:</label>
+      <select id="personality-select" data-personality>
+        <option value="restrained">Restrained</option>
+        <option value="editorial">Editorial</option>
+        <option value="kinetic">Kinetic</option>
+        <option value="playful">Playful</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <h2>Motion Primitives</h2>
+    <div class="demo-grid">
+      <!-- 1. Reveal on scroll -->
+      <div class="card">
+        <h3>1. Reveal on Scroll</h3>
+        <p>IntersectionObserver scroll or viewport entrance.</p>
+        <div style="min-height: 80px; display: flex; align-items: center;">
+          <div data-motion="reveal" class="box">Reveal</div>
+        </div>
+        <div class="controls">
+          <button data-run="reveal">Trigger Reveal</button>
+        </div>
+      </div>
+
+      <!-- 2. Stagger list -->
+      <div class="card">
+        <h3>2. Stagger List</h3>
+        <p>Cascading entrance with --stagger delay.</p>
+        <div data-motion="stagger" class="stagger-container">
+          <div class="stagger-item">1</div>
+          <div class="stagger-item">2</div>
+          <div class="stagger-item">3</div>
+          <div class="stagger-item">4</div>
+          <div class="stagger-item">5</div>
+        </div>
+        <div class="controls">
+          <button data-run="stagger">Trigger Stagger</button>
+        </div>
+      </div>
+
+      <!-- 3. Spring sheet / modal -->
+      <div class="card" style="min-height: 200px;">
+        <h3>3. Spring Sheet / Modal</h3>
+        <p>Drawer travel using contract curve and duration.</p>
+        <div data-motion="sheet" class="sheet-modal">
+          <strong>Modal Sheet Content</strong>
+          <p>Physics curve derived from personality tokens.</p>
+        </div>
+        <div class="controls" style="margin-top: auto;">
+          <button data-run="sheet">Toggle Sheet</button>
+        </div>
+      </div>
+
+      <!-- 4. FLIP transition -->
+      <div class="card">
+        <h3>4. FLIP Layout</h3>
+        <p>First, Last, Invert, Play transform animation.</p>
+        <div style="height: 70px;">
+          <div data-motion="flip" class="box" style="position: relative; left: 0px;">FLIP</div>
+        </div>
+        <div class="controls">
+          <button data-run="flip">Trigger FLIP</button>
+        </div>
+      </div>
+
+      <!-- 5. Magnetic hover -->
+      <div class="card">
+        <h3>5. Magnetic Hover</h3>
+        <p>Pointer offset spring tracking.</p>
+        <div style="height: 80px; display: flex; align-items: center; justify-content: center;">
+          <div data-motion="magnetic" class="box" style="cursor: pointer;">Magnet</div>
+        </div>
+        <div class="controls">
+          <button data-run="magnetic">Simulate Magnet</button>
+        </div>
+      </div>
+
+      <!-- 6. Page transition -->
+      <div class="card">
+        <h3>6. Page Transition</h3>
+        <p>Simultaneous cross-transition of views.</p>
+        <div style="position: relative; height: 80px;">
+          <div data-motion="page-in" class="page-box" style="position: absolute; inset: 0;">Page View A</div>
+          <div data-motion="page-out" class="page-box" style="position: absolute; inset: 0; opacity: 0;">Page View B</div>
+        </div>
+        <div class="controls">
+          <button data-run="page">Crossfade Page</button>
+        </div>
+      </div>
+
+      <!-- 7. Number ticker -->
+      <div class="card">
+        <h3>7. Number Ticker</h3>
+        <p>Digit rolling strip with WAAPI.</p>
+        <div style="font-size: 2rem; font-family: var(--font-mono); font-weight: bold; height: 60px; display: flex; align-items: center;">
+          <span data-motion="ticker">48</span>
+        </div>
+        <div class="controls">
+          <button data-run="ticker">Tick to 48</button>
+        </div>
+      </div>
+
+      <!-- 8. Skeleton crossfade -->
+      <div class="card">
+        <h3>8. Skeleton Crossfade</h3>
+        <p>Skeleton fades out while real content rises in.</p>
+        <div style="position: relative; height: 60px;">
+          <div data-motion="skeleton" style="position: absolute; inset: 0; background: var(--color-surface-hover); border-radius: var(--radius-sm);"></div>
+          <div data-motion="skeleton-content" style="position: absolute; inset: 0; opacity: 0;"><strong>Active Loaded Content</strong></div>
+        </div>
+        <div class="controls">
+          <button data-run="skeleton">Crossfade Skeleton</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>Procedural WebAudio Synthesis</h2>
+    <div class="card" style="margin-bottom: var(--space-8);">
+      <div class="controls">
+        <button id="toggle-sound">Toggle Sound (Currently: <span id="sound-state">MUTED</span>)</button>
+        <button id="btn-soft-mech">Soft Mechanical Click</button>
+        <button id="btn-glass">Glass Chime</button>
+        <button id="btn-analog">Analog Tape</button>
+        <button id="btn-minimal">Minimal Click</button>
+      </div>
+      <div id="sound-info" class="sound-status">
+        Played: <span id="stat-played">0</span> | Throttled: <span id="stat-throttled">0</span> | Graph nodes: tone/noise -> gain -> master -> destination
+      </div>
+    </div>
+
+    <h2>Typography Scales (Fluid clamp)</h2>
+    <div class="card">
+      <div style="font-size: var(--text-5xl); font-family: var(--font-display);">Display 5XL Title</div>
+      <div style="font-size: var(--text-3xl); font-family: var(--font-display);">Display 3XL Subtitle</div>
+      <div style="font-size: var(--text-base); font-family: var(--font-text);">Body text rendered with proportional optical sizing and fluid clamp scales.</div>
+      <div style="font-size: var(--text-xs); font-family: var(--font-mono); color: var(--color-muted);">Mono caption: tabular nums 0123456789</div>
+    </div>
+  </main>
+
+  <script type="module" src="../code/motion/boot.mjs"></script>
+  <script type="module">
+    import { initSound, resetSound } from '../code/sound/initSound.mjs';
+
+    let soundEngine = null;
+    function getSound() {
+      if (!soundEngine) {
+        soundEngine = initSound({ kit: 'minimal-click', volume: 0.15 });
+      }
+      return soundEngine;
+    }
+
+    const stateEl = document.getElementById('sound-state');
+    const toggleBtn = document.getElementById('toggle-sound');
+    const playedEl = document.getElementById('stat-played');
+    const throttledEl = document.getElementById('stat-throttled');
+
+    function updateStats() {
+      const s = getSound().stats();
+      stateEl.textContent = s.muted ? 'MUTED' : 'ACTIVE';
+      playedEl.textContent = s.played;
+      throttledEl.textContent = s.throttled;
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const engine = getSound();
+      engine.unlock();
+      engine.setMuted(!engine.muted);
+      updateStats();
+    });
+
+    document.getElementById('btn-soft-mech').addEventListener('click', () => {
+      const engine = initSound({ kit: 'soft-mechanical' });
+      engine.unlock();
+      engine.play('click');
+      updateStats();
+    });
+
+    document.getElementById('btn-glass').addEventListener('click', () => {
+      const engine = initSound({ kit: 'glass' });
+      engine.unlock();
+      engine.play('click');
+      updateStats();
+    });
+
+    document.getElementById('btn-analog').addEventListener('click', () => {
+      const engine = initSound({ kit: 'analog-tape' });
+      engine.unlock();
+      engine.play('open');
+      updateStats();
+    });
+
+    document.getElementById('btn-minimal').addEventListener('click', () => {
+      const engine = initSound({ kit: 'minimal-click' });
+      engine.unlock();
+      engine.play('click');
+      updateStats();
+    });
+  </script>
+</body>
+</html>

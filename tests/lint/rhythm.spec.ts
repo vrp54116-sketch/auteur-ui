@@ -99,3 +99,4 @@ describe('RHYTHM Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'rhythm/uniform-section-padding')).toBe(false);
   });
 });
+

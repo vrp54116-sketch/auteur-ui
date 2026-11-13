@@ -99,3 +99,4 @@ describe('SPACE Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'space/off-grid')).toBe(false);
   });
 });
+

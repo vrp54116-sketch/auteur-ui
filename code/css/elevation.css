@@ -1,0 +1,25 @@
+@layer elevation {
+  :root {
+    --shadow-color: 0.1 0.02 55;
+    
+    --shadow-sm: 0 1px 2px oklch(var(--shadow-color) / 0.12);
+    --shadow-md: 0 4px 6px -1px oklch(var(--shadow-color) / 0.16),
+                 0 2px 4px -2px oklch(var(--shadow-color) / 0.12);
+    --shadow-lg: 0 10px 15px -3px oklch(var(--shadow-color) / 0.18),
+                 0 4px 6px -4px oklch(var(--shadow-color) / 0.12);
+    --shadow-xl: 0 20px 25px -5px oklch(var(--shadow-color) / 0.22),
+                 0 8px 10px -6px oklch(var(--shadow-color) / 0.14);
+  }
+
+  .surface-raised {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .surface-floating {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+  }
+}

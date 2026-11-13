@@ -1,0 +1,48 @@
+/**
+ * Tailwind CSS v4 @theme configuration
+ * Maps auteur-ui contract tokens to native Tailwind utility namespaces.
+ */
+
+@theme {
+  /* Font families */
+  --font-display: var(--font-display, Newsreader, 'Times New Roman', serif);
+  --font-text: var(--font-text, 'Source Serif 4', Georgia, serif);
+  --font-mono: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+
+  /* Colors mapped to contract OKLCH tokens */
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+
+  /* Motion durations & curves */
+  --ease-auteur: var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  --duration-1: var(--dur-1, 120ms);
+  --duration-2: var(--dur-2, 200ms);
+  --duration-3: var(--dur-3, 320ms);
+
+  /* Radius tokens */
+  --radius-none: var(--radius-none, 0px);
+  --radius-sm: var(--radius-sm, 4px);
+  --radius-md: var(--radius-md, 8px);
+  --radius-lg: var(--radius-lg, 16px);
+  --radius-full: var(--radius-full, 9999px);
+
+  /* 4px/8px modular rhythm spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+}

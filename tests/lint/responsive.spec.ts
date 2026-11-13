@@ -55,3 +55,4 @@ describe('RESPONSIVE Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'responsive/horizontal-overflow')).toBe(false);
   });
 });
+

@@ -62,3 +62,4 @@ export const rhythmRule: Rule = {
     return violations;
   },
 };
+

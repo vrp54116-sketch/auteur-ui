@@ -92,3 +92,4 @@ export const motionRule: Rule = {
     return violations;
   },
 };
+

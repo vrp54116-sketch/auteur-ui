@@ -117,3 +117,4 @@ describe('HIERARCHY Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'hierarchy/heading-order')).toBe(false);
   });
 });
+

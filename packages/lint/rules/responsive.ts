@@ -60,3 +60,4 @@ export const responsiveRule: Rule = {
     return violations;
   },
 };
+

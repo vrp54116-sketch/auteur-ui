@@ -1,0 +1,23 @@
+@layer focus {
+  :focus-visible {
+    outline: 2px solid var(--color-accent, oklch(0.72 0.14 45));
+    outline-offset: 2px;
+  }
+
+  /* Specific keyboard-navigable elements */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--color-accent, oklch(0.72 0.14 45));
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px oklch(from var(--color-accent) l c h / 0.2);
+  }
+
+  /* Never completely remove outline without replacement */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}

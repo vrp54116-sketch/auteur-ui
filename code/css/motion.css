@@ -1,0 +1,32 @@
+@layer motion {
+  /* Default smooth interactive transitions */
+  button, a, input, select, textarea {
+    transition-property: background-color, border-color, color, box-shadow, transform, opacity;
+    transition-duration: var(--dur-1, 120ms);
+    transition-timing-function: var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  /* Utility classes for token-driven transitions */
+  .transition-quick {
+    transition: all var(--dur-1, 120ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .transition-base {
+    transition: all var(--dur-2, 200ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  .transition-slow {
+    transition: all var(--dur-3, 320ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  /* Strict prefers-reduced-motion override */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0s !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0s !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

@@ -161,3 +161,4 @@ describe('SLOP TELLS Rule Checks (-8 pts each)', () => {
     expect(violations.some((v) => v.ruleId === 'slop/generic-cta-pair')).toBe(true);
   });
 });
+

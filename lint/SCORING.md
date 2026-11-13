@@ -84,3 +84,4 @@ The 10 cardinal aesthetic sins of generic AI-generated interfaces. These represe
 ## 5. Pass/Fail Decision Matrix
 $$\text{Score} = \max\left(0, 100 - \sum \text{Deductions}\right)$$
 $$\text{Pass} = (\text{Score} \ge 80) \land (\text{Hard Fails} = 0)$$
+

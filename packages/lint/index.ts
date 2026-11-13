@@ -50,3 +50,4 @@ export async function lint(options: LintOptions): Promise<LintResult> {
 }
 
 export { explainRule };
+

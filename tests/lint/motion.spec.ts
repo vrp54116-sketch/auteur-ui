@@ -141,3 +141,4 @@ describe('MOTION Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'motion/missing-prefers-reduced-motion')).toBe(false);
   });
 });
+

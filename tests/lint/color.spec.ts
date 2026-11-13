@@ -133,3 +133,4 @@ describe('COLOR Rule Checks', () => {
     expect(violations.some((v) => v.ruleId === 'color/pure-black-surface')).toBe(true);
   });
 });
+
