@@ -170,3 +170,128 @@ All token budget invariants satisfied.
 - **Manifest Budget**: Limit 600 tokens | Measured: 404 tokens (`looks/index.json`) | PASS
 - **WCAG AA Contrast**: Minimum required: 4.5:1 | Measured range: 6.68:1 to 19.44:1 across all 5 looks | All PASS
 - **Network Calls at Runtime**: 0
+
+
+## Phase 3: The Preview Renderer
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`packages/preview/types.ts`** — Types defining `Direction` (`id`, `look`, `headline`, `sub`, `cta`, `mood`), `TaskBrief` (`id`, `type`, `prompt`, `title`), and `PreviewRenderOptions`.
+2. **`packages/preview/templates.ts`** — 4 semantic subject templates implemented as pure HTML/CSS strings, providing IDENTICAL component DOM structures per task type across all direction panels:
+   - `music`: Player bar (artwork, controls, scrub seekbar, timestamps) + 4-track queue list + 3-album grid.
+   - `dashboard`: 4 KPI stat cards + SVG telemetry line/area chart with gradient + endpoints data table.
+   - `landing`: Hero section (kicker pill, headline, sub, CTA row) + 3 feature cards + quickstart terminal block.
+   - `editorial`: Publication article header + dropcap lead text + pull quote + two-column body + framed architectural plate.
+3. **`packages/preview/render.ts`** — Pure function `renderDirections(directions: Direction[], task: TaskBrief): string` returning a self-contained preview HTML document with ZERO LLM calls:
+   - CSS custom property injection from each `look.json` (`--color-*`, `--font-*`, `--radius-*`, `--space-*`, `--motion-*`).
+   - Dev-time Google Fonts link for authentic OFL fonts with documented local system font fallback stacks and graceful offline resilience (`onerror` handling, zero render blocking).
+   - Personality-based hover and entrance CSS motion per look (`restrained`, `editorial`, `kinetic`, `playful`).
+   - Real sound: WebAudio synthesizer in code (muted by default, toggle button) synthesizing custom sound blips (`minimal-click`, `bubble-pop`, `warm-thud`, `mechanical-switch`, `paper-rustle`).
+   - Big number badge (1–N) on each panel + sticky "reply with 1–N" footer.
+   - Keyboard 1–5 hotkeys and panel click handlers that highlight the panel and copy the direction ID to the clipboard.
+   - Embedded fallbacks for all 5 curated looks to guarantee graceful degradation without crashing.
+4. **`packages/preview/contact-sheet.ts`** — Playwright contact sheet generator saving a single 1200px-wide PNG of all panels for human review in the repository (never fed to a model).
+5. **`packages/preview/index.ts`** — Barrel export for the preview package.
+6. **`bin/auteur-ui.mjs`** — CLI executable supporting `npx auteur-ui preview`:
+   - `--directions <path>` (default: `.auteur-ui/directions.json`).
+   - `--task <path|type>` (default: autodetect).
+   - `--out <path>` (default: `.auteur-ui/preview.html`).
+   - `--contact-sheet [path]` (captures 1200px PNG contact sheet).
+   - `--open` (opens preview HTML in default browser).
+7. **`tests/fixtures/directions.json`** & **`.auteur-ui/directions.json`** — 5 curated directions across all 5 looks measuring 365 tokens formatted / 256 tokens compact (strictly <= 400 token hard constraint).
+8. **`tests/fixtures/preview.golden.html`** — Golden HTML snapshot fixture for regression tests.
+9. **`tests/preview.spec.ts`** — Vitest test suite validating:
+   - Direction token budget constraint (<= 400 tokens).
+   - Golden-file HTML snapshot exact equality.
+   - Multi-template coverage across all 4 subject templates.
+   - Playwright 1200px viewport rendering with pixel-diff <= 1% tolerance (measured 0.0000%).
+10. **`scripts/budget.ts`** & **`package.json`** — Wired `"bin"` configuration and added 5-direction output token budget to `pnpm budget`.
+
+### Acceptance Command Run: `pnpm test`
+```bash
+pnpm test
+```
+
+### Actual Output: `pnpm test`
+```
+$ vitest run
+
+ RUN  v5.1.0 /Users/vanshpatel/Desktop/auteur-ui
+
+ ✓ tests/contract.test.ts (3 tests) 7ms
+ ✓ tests/looks.test.ts (17 tests) 11ms
+stdout | tests/preview.spec.ts > Preview Renderer (Phase 3) > HARD CONSTRAINT: 5 directions must consume <= 400 output tokens
+
+======================================================
+   Direction Output Token Budget Verification
+======================================================
+Formatted directions.json tokens : 365 / 400 limit
+Compact JSON tokens              : 256 / 400 limit
+Status                           : ✓ PASS
+======================================================
+
+stdout | tests/preview.spec.ts > Preview Renderer (Phase 3) > Playwright 1200px Rendering & Pixel-Diff Test > renders at 1200px viewport and achieves pixel-diff < 1% tolerance across renders
+Playwright Pixel-Diff Measured: 0.0000% (Tolerance <= 1.0%)
+
+ ✓ tests/preview.spec.ts (4 tests) 1533ms
+   ✓ Preview Renderer (Phase 3) (4)
+     ✓ Playwright 1200px Rendering & Pixel-Diff Test (1)
+       ✓ renders at 1200px viewport and achieves pixel-diff < 1% tolerance across renders 1427ms
+
+ Test Files  3 passed (3)
+      Tests  24 passed (24)
+   Start at  15:32:15
+   Duration  1.81s (tests 79%, import 19%, transform 2%)
+```
+
+### Acceptance Command Run: `node -e` Demo
+```bash
+node -e "
+const fs = require('fs');
+const { encode } = require('gpt-tokenizer');
+
+import('./dist/packages/preview/index.js').then(({ renderDirections }) => {
+  const directionsRaw = fs.readFileSync('tests/fixtures/directions.json', 'utf8');
+  const directions = JSON.parse(directionsRaw);
+  const task = {
+    id: 'spotify-listening',
+    title: 'Music Listening App',
+    prompt: 'Build a music listening app like Spotify',
+    type: 'music'
+  };
+
+  const html = renderDirections(directions, task);
+  fs.writeFileSync('.auteur-ui/preview.html', html, 'utf8');
+
+  const formattedTokens = encode(directionsRaw).length;
+  const compactTokens = encode(JSON.stringify(directions)).length;
+
+  console.log('--- auteur-ui Phase 3 Demo ---');
+  console.log('Directions loaded:', directions.length);
+  console.log('Task type:', task.type);
+  console.log('Output preview HTML written to: .auteur-ui/preview.html (' + html.length + ' bytes)');
+  console.log('Directions token count (formatted):', formattedTokens, 'tokens (limit: 400)');
+  console.log('Directions token count (compact):  ', compactTokens, 'tokens (limit: 400)');
+  console.log('Demo finished successfully with ZERO LLM calls.');
+});
+"
+```
+
+### Actual Output: `node -e` Demo
+```
+--- auteur-ui Phase 3 Demo ---
+Directions loaded: 5
+Task type: music
+Output preview HTML written to: .auteur-ui/preview.html (75061 bytes)
+Directions token count (formatted): 365 tokens (limit: 400)
+Directions token count (compact):   256 tokens (limit: 400)
+Demo finished successfully with ZERO LLM calls.
+```
+
+### Token Measurements & Invariant Verification
+- **Hard Constraint: 5 Directions Token Budget**: Limit 400 tokens | Measured: 365 tokens (formatted), 256 tokens (compact) | PASS
+- **Deterministic Heavy Lifting**: 100% deterministic code generation; zero LLM calls.
+- **Playwright Pixel-Diff Stability**: Limit <= 1.0% tolerance | Measured: 0.0000% | PASS
+- **Runtime Network**: Zero network dependencies during build or execution. External fonts link includes complete offline fallback stacks.

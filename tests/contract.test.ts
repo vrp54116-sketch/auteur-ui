@@ -101,3 +101,4 @@ describe('Contract Schema & toMarkdown', () => {
     expect(tokenCount).toBeLessThanOrEqual(300);
   });
 });
+

@@ -131,3 +131,4 @@ export function passesWcagAa(
   const threshold = isLargeText ? 3.0 : 4.5;
   return ratio >= threshold;
 }
+

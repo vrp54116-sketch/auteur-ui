@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "auteur-ui": "./bin/auteur-ui.mjs"
+  },
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

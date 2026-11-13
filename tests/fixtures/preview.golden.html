@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>auteur-ui preview • Music Listening App</title>
+
+  <!-- Google Fonts (Preview only, dev-time, permissive SIL OFL licenses) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600&family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap"
+    rel="stylesheet"
+    onerror="console.warn('[auteur-ui] External fonts unreachable or offline; falling back to documented local system stacks.')"
+  >
+
+  <style>
+    /* Global Base Reset & Host Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --host-bg: oklch(0.14 0.01 260);
+      --host-surface: oklch(0.20 0.012 260);
+      --host-border: oklch(0.30 0.015 260);
+      --host-fg: oklch(0.96 0.005 260);
+      --host-fg-muted: oklch(0.68 0.015 260);
+      --host-accent: oklch(0.72 0.18 160);
+      --font-host-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-host-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    }
+
+    body {
+      background-color: var(--host-bg);
+      color: var(--host-fg);
+      font-family: var(--font-host-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Host App Header */
+    .host-header {
+      background-color: var(--host-surface);
+      border-bottom: 1px solid var(--host-border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+    }
+
+    .host-branding {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .host-logo-badge {
+      font-family: var(--font-host-mono);
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--host-accent);
+      color: #000;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .host-title-group h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--host-fg);
+    }
+
+    .host-title-group p {
+      font-size: 12px;
+      color: var(--host-fg-muted);
+    }
+
+    .host-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sound-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--host-border);
+      color: var(--host-fg);
+      font-family: var(--font-host-mono);
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 150ms ease;
+    }
+
+    .sound-toggle-btn:hover {
+      background: var(--host-surface);
+      border-color: var(--host-fg-muted);
+    }
+
+    .sound-toggle-btn.active {
+      border-color: var(--host-accent);
+      color: var(--host-accent);
+      background: rgba(0, 255, 180, 0.05);
+    }
+
+    .host-key-hint {
+      font-family: var(--font-host-mono);
+      font-size: 11px;
+      color: var(--host-fg-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--host-border);
+    }
+
+    /* Main Showcase Stage */
+    .preview-stage {
+      flex: 1;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(320px, 1fr));
+      gap: 24px;
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    @media (max-width: 1100px) {
+      .preview-stage {
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      }
+    }
+
+    /* Direction Panel Container */
+    .direction-panel {
+      background-color: var(--color-bg);
+      color: var(--color-fg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      transition: transform var(--motion-dur-normal) var(--motion-ease),
+                  box-shadow var(--motion-dur-normal) var(--motion-ease),
+                  border-color var(--motion-dur-fast) var(--motion-ease);
+      animation: panelIn var(--motion-dur-normal) var(--motion-ease) both;
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .direction-panel:focus-visible {
+      box-shadow: 0 0 0 3px var(--color-accent);
+    }
+
+    /* Personality-based Hover Motion */
+    .direction-panel[data-personality="restrained"]:hover {
+      transform: translateY(0px);
+      border-color: var(--color-accent);
+    }
+
+    .direction-panel[data-personality="editorial"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .direction-panel[data-personality="kinetic"]:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+    }
+
+    .direction-panel[data-personality="playful"]:hover {
+      transform: translateY(-6px) scale(1.012);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.20);
+    }
+
+    .direction-panel.is-selected {
+      border-color: var(--color-accent) !important;
+      box-shadow: 0 0 0 3px var(--color-accent), 0 12px 32px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    /* Panel Header */
+    .panel-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--color-border);
+      background-color: var(--color-surface);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .panel-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-badge-num {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background-color: var(--color-accent);
+      color: var(--color-bg);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .panel-look-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .panel-look-tag {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-fg);
+    }
+
+    .panel-look-mode {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: var(--radius-none);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      color: var(--color-fg-muted);
+    }
+
+    .panel-mood {
+      font-family: var(--font-text);
+      font-size: 12px;
+      font-style: italic;
+      color: var(--color-fg-muted);
+      line-height: 1.4;
+    }
+
+    /* Stage Area for Subject Template */
+    .panel-subject-stage {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-family: var(--font-text);
+    }
+
+    /* Panel Footer */
+    .panel-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--color-border);
+      background-color: var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-id-display {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .panel-id-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-fg-muted);
+      font-family: var(--font-mono);
+    }
+
+    .panel-id-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    .panel-select-trigger {
+      background-color: var(--color-accent);
+      color: var(--color-bg);
+      border: 1px solid transparent;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter var(--motion-dur-fast) var(--motion-ease),
+                  transform var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .panel-select-trigger:hover {
+      filter: brightness(1.1);
+      transform: scale(1.03);
+    }
+
+    /* Host Persistent Footer */
+    .host-footer {
+      background-color: var(--host-surface);
+      border-top: 1px solid var(--host-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-host-mono);
+      font-size: 12px;
+      color: var(--host-fg-muted);
+      position: sticky;
+      bottom: 0;
+      z-index: 40;
+    }
+
+    .host-reply-prompt {
+      color: var(--host-fg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .host-kbd-badge {
+      background: var(--host-bg);
+      border: 1px solid var(--host-border);
+      color: var(--host-accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    /* Floating Toast */
+    .toast-banner {
+      position: fixed;
+      bottom: 64px;
+      left: 50%;
+      transform: translateX(-50%) translateY(30px);
+      background: var(--host-surface);
+      border: 1px solid var(--host-accent);
+      color: var(--host-fg);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: var(--font-host-mono);
+      font-size: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast-banner.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ======================================================== */
+    /* Subject Template Common Component Styles               */
+    /* (Controlled entirely by injected CSS custom properties) */
+    /* ======================================================== */
+
+    .font-mono {
+      font-family: var(--font-mono) !important;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform var(--motion-dur-fast) var(--motion-ease),
+                  filter var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .btn-action:hover {
+      filter: brightness(1.1);
+      transform: scale(1.02);
+    }
+
+    .btn-action.primary {
+      background-color: var(--color-accent);
+      color: var(--color-bg);
+    }
+
+    .btn-action.secondary {
+      background-color: var(--color-surface);
+      color: var(--color-fg);
+      border-color: var(--color-border);
+    }
+
+    /* Template 1: Music App */
+    .template-music {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .music-player-bar {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .player-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .player-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    .player-meta {
+      min-width: 0;
+    }
+
+    .player-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-artist {
+      font-size: 11px;
+      color: var(--color-fg-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      max-width: 280px;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-btn-icon {
+      background: transparent;
+      border: none;
+      color: var(--color-fg-muted);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: color var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .player-btn-icon:hover {
+      color: var(--color-fg);
+    }
+
+    .player-play-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-accent);
+      color: var(--color-bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .player-play-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .player-scrubber {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .player-time {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-fg-muted);
+    }
+
+    .player-progress-track {
+      flex: 1;
+      height: 4px;
+      background: var(--color-bg);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .player-progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: var(--radius-full);
+    }
+
+    .music-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .section-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-fg-muted);
+    }
+
+    .track-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .track-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: var(--color-surface);
+      font-size: 12px;
+      transition: background var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .track-row:hover {
+      border-color: var(--color-border);
+      background: var(--color-bg);
+    }
+
+    .track-row.active {
+      border-color: var(--color-accent);
+    }
+
+    .track-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-fg-muted);
+      width: 20px;
+    }
+
+    .track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .track-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-sub {
+      font-size: 10px;
+      color: var(--color-fg-muted);
+    }
+
+    .track-album {
+      font-size: 11px;
+      color: var(--color-fg-muted);
+    }
+
+    .track-duration {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-fg-muted);
+    }
+
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .album-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .album-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .album-cover {
+      aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 6px;
+    }
+
+    .cover-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.2;
+      background: radial-gradient(circle at center, var(--color-accent) 0%, transparent 70%);
+    }
+
+    .cover-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      padding: 1px 4px;
+      border-radius: var(--radius-none);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      color: var(--color-accent);
+      z-index: 2;
+    }
+
+    .album-title {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .album-meta {
+      font-size: 10px;
+      color: var(--color-fg-muted);
+    }
+
+    /* Template 2: Dashboard */
+    .template-dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--color-fg-muted);
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-fg);
+    }
+
+    .stat-delta {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-delta.positive {
+      color: var(--color-accent);
+    }
+
+    .stat-delta.neutral {
+      color: var(--color-fg-muted);
+    }
+
+    .chart-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .chart-sub {
+      font-size: 11px;
+      color: var(--color-fg-muted);
+    }
+
+    .chart-svg-wrap {
+      width: 100%;
+      height: 90px;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .chart-axis {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-fg-muted);
+      border-top: 1px solid var(--color-border);
+      padding-top: 4px;
+    }
+
+    .table-box {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      font-size: 11px;
+    }
+
+    .table-header-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+      padding: 8px 10px;
+      background: var(--color-surface);
+      font-family: var(--font-mono);
+      color: var(--color-fg-muted);
+      text-transform: uppercase;
+      font-size: 10px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+      padding: 8px 10px;
+      align-items: center;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-bg);
+      transition: background var(--motion-dur-fast) var(--motion-ease);
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .table-row:hover {
+      background: var(--color-surface);
+    }
+
+    .method-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: var(--radius-sm);
+    }
+
+    .method-tag.post {
+      background: rgba(255, 140, 0, 0.15);
+      color: #ff9d00;
+    }
+
+    .method-tag.get {
+      background: rgba(0, 200, 100, 0.15);
+      color: #00d26a;
+    }
+
+    .status-pill.ok {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--color-accent);
+    }
+
+    /* Template 3: Landing Page */
+    .template-landing {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .landing-hero {
+      padding: 16px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-accent);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .hero-sub {
+      font-size: 12px;
+      color: var(--color-fg-muted);
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .feature-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .feature-icon {
+      color: var(--color-accent);
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .feature-text {
+      font-size: 11px;
+      color: var(--color-fg-muted);
+      line-height: 1.4;
+    }
+
+    .terminal-block {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .terminal-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-border);
+    }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-fg-muted);
+    }
+
+    .terminal-code {
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-fg);
+      background: var(--color-bg);
+      overflow-x: auto;
+    }
+
+    /* Template 4: Editorial Journal */
+    .template-editorial {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .editorial-header {
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .editorial-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-accent);
+    }
+
+    .editorial-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .editorial-sub {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--color-fg-muted);
+      line-height: 1.4;
+    }
+
+    .editorial-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-fg-muted);
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pull-quote {
+      border-left: 2px solid var(--color-accent);
+      padding: 8px 12px;
+      background: var(--color-surface);
+      border-radius: var(--radius-none);
+      display: flex;
+      gap: 8px;
+    }
+
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+
+    .quote-text {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .editorial-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--color-fg);
+    }
+
+    .dropcap {
+      float: left;
+      font-family: var(--font-display);
+      font-size: 32px;
+      line-height: 0.8;
+      padding-right: 6px;
+      padding-top: 2px;
+      color: var(--color-accent);
+    }
+
+    .editorial-plate {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .plate-inner {
+      height: 70px;
+      background: var(--color-surface);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plate-grid-lines {
+      position: absolute;
+      inset: 0;
+      opacity: 0.15;
+      background-image: linear-gradient(var(--color-border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    .plate-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--color-fg-muted);
+      z-index: 2;
+    }
+
+    .plate-caption {
+      padding: 8px 12px;
+      background: var(--color-bg);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--color-fg-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Host App Header -->
+  <header class="host-header">
+    <div class="host-branding">
+      <span class="host-logo-badge">auteur-ui</span>
+      <div class="host-title-group">
+        <h1>Music Listening App</h1>
+        <p>Build a music listening app like Spotify</p>
+      </div>
+    </div>
+    <div class="host-actions">
+      <button id="sound-toggle" class="sound-toggle-btn" type="button" onclick="toggleSound()">
+        <span id="sound-icon">🔇</span>
+        <span id="sound-label">Sound: Off</span>
+      </button>
+      <span class="host-key-hint">Press 1–5 to select</span>
+    </div>
+  </header>
+
+  <!-- Showcase Panels Stage -->
+  <main class="preview-stage">
+    
+      <section
+        class="direction-panel"
+        id="panel-kinetic-groove"
+        data-index="1"
+        data-direction-id="kinetic-groove"
+        data-look="kinetic-pop"
+        data-personality="playful"
+        data-sound-kit="bubble-pop"
+        data-sound-vol="0.35"
+        style="--color-bg: oklch(0.97 0.015 285); --color-surface: oklch(1.0 0 0); --color-border: oklch(0.15 0.02 285); --color-fg: oklch(0.12 0.02 285); --color-fg-muted: oklch(0.40 0.03 285); --color-accent: oklch(0.68 0.26 350); --font-display: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; --font-text: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; --font-mono: 'Space Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --type-scale: 1.414; --radius-none: 0px; --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 9999px; --space-base: 8px; --motion-ease: cubic-bezier(0.34, 1.56, 0.64, 1); --motion-dur-fast: 200ms; --motion-dur-normal: 400ms; --motion-dur-slow: 600ms; --motion-stagger: 50ms;"
+        tabindex="0"
+        aria-label="Direction 1: Sonic Velocity"
+        onclick="selectPanel(1, 'kinetic-groove')"
+      >
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="panel-header-top">
+            <span class="panel-badge-num">1</span>
+            <div class="panel-look-info">
+              <span class="panel-look-tag">Kinetic Pop</span>
+              <span class="panel-look-mode">light</span>
+            </div>
+          </div>
+          <div class="panel-mood">“Playful electric rhythm with bouncy spring motion”</div>
+        </div>
+
+        <!-- Subject Component Template (Identical markup across panels) -->
+        <div class="panel-subject-stage">
+          
+  <div class="template-music">
+    <!-- Player Bar -->
+    <div class="music-player-bar">
+      <div class="player-left">
+        <div class="player-thumb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
+        <div class="player-meta">
+          <div class="player-title">Sonic Velocity</div>
+          <div class="player-artist">High-chroma streaming with instant track response</div>
+        </div>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="player-btn-icon" aria-label="Shuffle" title="Shuffle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Previous" title="Previous">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-play-btn" aria-label="Play">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Next" title="Next">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Repeat" title="Repeat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          </button>
+        </div>
+        <div class="player-scrubber">
+          <span class="player-time">02:41</span>
+          <div class="player-progress-track">
+            <div class="player-progress-fill" style="width: 64%;"></div>
+          </div>
+          <span class="player-time">04:15</span>
+        </div>
+      </div>
+      <div class="player-right">
+        <button class="btn-action primary">Start Listening</button>
+      </div>
+    </div>
+
+    <!-- Track List -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Queue & Recent Tracks</h3>
+        <span class="section-badge">4 Selected</span>
+      </div>
+      <div class="track-list">
+        <div class="track-row">
+          <span class="track-num">01</span>
+          <div class="track-info">
+            <div class="track-name">Midnight Velocity</div>
+            <div class="track-sub">Auteur Lab • Electric Cut</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">03:24</span>
+        </div>
+        <div class="track-row active">
+          <span class="track-num">02</span>
+          <div class="track-info">
+            <div class="track-name">Phosphor Synthesis</div>
+            <div class="track-sub">Monad Sync • CRT Tone</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">04:12</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">03</span>
+          <div class="track-info">
+            <div class="track-name">Brutalist Rhythm</div>
+            <div class="track-sub">Studio Grid • 120 BPM</div>
+          </div>
+          <span class="track-album">Form Follows Rhythm</span>
+          <span class="track-duration">02:58</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">04</span>
+          <div class="track-info">
+            <div class="track-name">Subtle Typographies</div>
+            <div class="track-sub">Editorial Sound • Slow Press</div>
+          </div>
+          <span class="track-album">Liner Notes</span>
+          <span class="track-duration">05:03</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Album Grid -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Featured Releases</h3>
+      </div>
+      <div class="album-grid">
+        <div class="album-card">
+          <div class="album-cover cover-1">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LP</span>
+          </div>
+          <div class="album-title">Analog Architecture</div>
+          <div class="album-meta">8 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-2">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">EP</span>
+          </div>
+          <div class="album-title">Harmonic Precision</div>
+          <div class="album-meta">12 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-3">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LIVE</span>
+          </div>
+          <div class="album-title">Monochrome Suite</div>
+          <div class="album-meta">10 Tracks • 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="panel-footer">
+          <div class="panel-id-display">
+            <span class="panel-id-label">Direction ID</span>
+            <code class="panel-id-code">kinetic-groove</code>
+          </div>
+          <button
+            class="panel-select-trigger"
+            type="button"
+            onclick="event.stopPropagation(); selectPanel(1, 'kinetic-groove')"
+          >
+            Select [1]
+          </button>
+        </div>
+      </section>
+    
+
+      <section
+        class="direction-panel"
+        id="panel-swiss-audio"
+        data-index="2"
+        data-direction-id="swiss-audio"
+        data-look="swiss-utility"
+        data-personality="restrained"
+        data-sound-kit="minimal-click"
+        data-sound-vol="0.1"
+        style="--color-bg: oklch(0.985 0.002 90); --color-surface: oklch(0.95 0.003 90); --color-border: oklch(0.2 0.005 90); --color-fg: oklch(0.12 0.005 90); --color-fg-muted: oklch(0.42 0.008 90); --color-accent: oklch(0.58 0.23 28); --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; --font-text: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; --font-mono: 'Space Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --type-scale: 1.2; --radius-none: 0px; --radius-sm: 0px; --radius-md: 0px; --radius-lg: 0px; --radius-full: 0px; --space-base: 4px; --motion-ease: linear; --motion-dur-fast: 80ms; --motion-dur-normal: 150ms; --motion-dur-slow: 250ms; --motion-stagger: 15ms;"
+        tabindex="0"
+        aria-label="Direction 2: Acoustic Metric"
+        onclick="selectPanel(2, 'swiss-audio')"
+      >
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="panel-header-top">
+            <span class="panel-badge-num">2</span>
+            <div class="panel-look-info">
+              <span class="panel-look-tag">Swiss Utility</span>
+              <span class="panel-look-mode">light</span>
+            </div>
+          </div>
+          <div class="panel-mood">“Functionalist restraint and stark mathematical layout”</div>
+        </div>
+
+        <!-- Subject Component Template (Identical markup across panels) -->
+        <div class="panel-subject-stage">
+          
+  <div class="template-music">
+    <!-- Player Bar -->
+    <div class="music-player-bar">
+      <div class="player-left">
+        <div class="player-thumb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
+        <div class="player-meta">
+          <div class="player-title">Acoustic Metric</div>
+          <div class="player-artist">Zero-decoration player with dense telemetry and clean mono typography</div>
+        </div>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="player-btn-icon" aria-label="Shuffle" title="Shuffle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Previous" title="Previous">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-play-btn" aria-label="Play">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Next" title="Next">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Repeat" title="Repeat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          </button>
+        </div>
+        <div class="player-scrubber">
+          <span class="player-time">02:41</span>
+          <div class="player-progress-track">
+            <div class="player-progress-fill" style="width: 64%;"></div>
+          </div>
+          <span class="player-time">04:15</span>
+        </div>
+      </div>
+      <div class="player-right">
+        <button class="btn-action primary">Stream Now</button>
+      </div>
+    </div>
+
+    <!-- Track List -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Queue & Recent Tracks</h3>
+        <span class="section-badge">4 Selected</span>
+      </div>
+      <div class="track-list">
+        <div class="track-row">
+          <span class="track-num">01</span>
+          <div class="track-info">
+            <div class="track-name">Midnight Velocity</div>
+            <div class="track-sub">Auteur Lab • Electric Cut</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">03:24</span>
+        </div>
+        <div class="track-row active">
+          <span class="track-num">02</span>
+          <div class="track-info">
+            <div class="track-name">Phosphor Synthesis</div>
+            <div class="track-sub">Monad Sync • CRT Tone</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">04:12</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">03</span>
+          <div class="track-info">
+            <div class="track-name">Brutalist Rhythm</div>
+            <div class="track-sub">Studio Grid • 120 BPM</div>
+          </div>
+          <span class="track-album">Form Follows Rhythm</span>
+          <span class="track-duration">02:58</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">04</span>
+          <div class="track-info">
+            <div class="track-name">Subtle Typographies</div>
+            <div class="track-sub">Editorial Sound • Slow Press</div>
+          </div>
+          <span class="track-album">Liner Notes</span>
+          <span class="track-duration">05:03</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Album Grid -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Featured Releases</h3>
+      </div>
+      <div class="album-grid">
+        <div class="album-card">
+          <div class="album-cover cover-1">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LP</span>
+          </div>
+          <div class="album-title">Analog Architecture</div>
+          <div class="album-meta">8 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-2">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">EP</span>
+          </div>
+          <div class="album-title">Harmonic Precision</div>
+          <div class="album-meta">12 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-3">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LIVE</span>
+          </div>
+          <div class="album-title">Monochrome Suite</div>
+          <div class="album-meta">10 Tracks • 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="panel-footer">
+          <div class="panel-id-display">
+            <span class="panel-id-label">Direction ID</span>
+            <code class="panel-id-code">swiss-audio</code>
+          </div>
+          <button
+            class="panel-select-trigger"
+            type="button"
+            onclick="event.stopPropagation(); selectPanel(2, 'swiss-audio')"
+          >
+            Select [2]
+          </button>
+        </div>
+      </section>
+    
+
+      <section
+        class="direction-panel"
+        id="panel-nocturne-sound"
+        data-index="3"
+        data-direction-id="nocturne-sound"
+        data-look="nocturne-editorial"
+        data-personality="editorial"
+        data-sound-kit="mechanical-silent"
+        data-sound-vol="0.15"
+        style="--color-bg: oklch(0.18 0.02 45); --color-surface: oklch(0.24 0.025 45); --color-border: oklch(0.35 0.025 45); --color-fg: oklch(0.94 0.02 65); --color-fg-muted: oklch(0.72 0.03 60); --color-accent: oklch(0.75 0.14 55); --font-display: 'Newsreader', Georgia, 'Times New Roman', Cambria, serif; --font-text: 'Source Serif 4', Georgia, 'Times New Roman', Cambria, serif; --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --type-scale: 1.333; --radius-none: 0px; --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-full: 9999px; --space-base: 4px; --motion-ease: cubic-bezier(0.25, 0.1, 0.25, 1.0); --motion-dur-fast: 180ms; --motion-dur-normal: 360ms; --motion-dur-slow: 720ms; --motion-stagger: 35ms;"
+        tabindex="0"
+        aria-label="Direction 3: The Listening Room"
+        onclick="selectPanel(3, 'nocturne-sound')"
+      >
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="panel-header-top">
+            <span class="panel-badge-num">3</span>
+            <div class="panel-look-info">
+              <span class="panel-look-tag">Nocturne Editorial</span>
+              <span class="panel-look-mode">dark</span>
+            </div>
+          </div>
+          <div class="panel-mood">“Deep darkroom warmth with graceful literary cadence”</div>
+        </div>
+
+        <!-- Subject Component Template (Identical markup across panels) -->
+        <div class="panel-subject-stage">
+          
+  <div class="template-music">
+    <!-- Player Bar -->
+    <div class="music-player-bar">
+      <div class="player-left">
+        <div class="player-thumb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
+        <div class="player-meta">
+          <div class="player-title">The Listening Room</div>
+          <div class="player-artist">Warm nighttime audio journal featuring longform liner notes</div>
+        </div>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="player-btn-icon" aria-label="Shuffle" title="Shuffle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Previous" title="Previous">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-play-btn" aria-label="Play">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Next" title="Next">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Repeat" title="Repeat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          </button>
+        </div>
+        <div class="player-scrubber">
+          <span class="player-time">02:41</span>
+          <div class="player-progress-track">
+            <div class="player-progress-fill" style="width: 64%;"></div>
+          </div>
+          <span class="player-time">04:15</span>
+        </div>
+      </div>
+      <div class="player-right">
+        <button class="btn-action primary">Enter Chamber</button>
+      </div>
+    </div>
+
+    <!-- Track List -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Queue & Recent Tracks</h3>
+        <span class="section-badge">4 Selected</span>
+      </div>
+      <div class="track-list">
+        <div class="track-row">
+          <span class="track-num">01</span>
+          <div class="track-info">
+            <div class="track-name">Midnight Velocity</div>
+            <div class="track-sub">Auteur Lab • Electric Cut</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">03:24</span>
+        </div>
+        <div class="track-row active">
+          <span class="track-num">02</span>
+          <div class="track-info">
+            <div class="track-name">Phosphor Synthesis</div>
+            <div class="track-sub">Monad Sync • CRT Tone</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">04:12</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">03</span>
+          <div class="track-info">
+            <div class="track-name">Brutalist Rhythm</div>
+            <div class="track-sub">Studio Grid • 120 BPM</div>
+          </div>
+          <span class="track-album">Form Follows Rhythm</span>
+          <span class="track-duration">02:58</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">04</span>
+          <div class="track-info">
+            <div class="track-name">Subtle Typographies</div>
+            <div class="track-sub">Editorial Sound • Slow Press</div>
+          </div>
+          <span class="track-album">Liner Notes</span>
+          <span class="track-duration">05:03</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Album Grid -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Featured Releases</h3>
+      </div>
+      <div class="album-grid">
+        <div class="album-card">
+          <div class="album-cover cover-1">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LP</span>
+          </div>
+          <div class="album-title">Analog Architecture</div>
+          <div class="album-meta">8 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-2">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">EP</span>
+          </div>
+          <div class="album-title">Harmonic Precision</div>
+          <div class="album-meta">12 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-3">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LIVE</span>
+          </div>
+          <div class="album-title">Monochrome Suite</div>
+          <div class="album-meta">10 Tracks • 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="panel-footer">
+          <div class="panel-id-display">
+            <span class="panel-id-label">Direction ID</span>
+            <code class="panel-id-code">nocturne-sound</code>
+          </div>
+          <button
+            class="panel-select-trigger"
+            type="button"
+            onclick="event.stopPropagation(); selectPanel(3, 'nocturne-sound')"
+          >
+            Select [3]
+          </button>
+        </div>
+      </section>
+    
+
+      <section
+        class="direction-panel"
+        id="panel-terminal-hifi"
+        data-index="4"
+        data-direction-id="terminal-hifi"
+        data-look="terminal-luxe"
+        data-personality="restrained"
+        data-sound-kit="amber-relay"
+        data-sound-vol="0.2"
+        style="--color-bg: oklch(0.12 0.005 130); --color-surface: oklch(0.16 0.008 130); --color-border: oklch(0.28 0.015 130); --color-fg: oklch(0.92 0.03 130); --color-fg-muted: oklch(0.68 0.04 130); --color-accent: oklch(0.85 0.22 142); --font-display: 'JetBrains Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --font-text: 'JetBrains Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --type-scale: 1.125; --radius-none: 0px; --radius-sm: 2px; --radius-md: 3px; --radius-lg: 4px; --radius-full: 0px; --space-base: 4px; --motion-ease: steps(4, jump-end); --motion-dur-fast: 50ms; --motion-dur-normal: 100ms; --motion-dur-slow: 200ms; --motion-stagger: 10ms;"
+        tabindex="0"
+        aria-label="Direction 4: Signal Chain"
+        onclick="selectPanel(4, 'terminal-hifi')"
+      >
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="panel-header-top">
+            <span class="panel-badge-num">4</span>
+            <div class="panel-look-info">
+              <span class="panel-look-tag">Terminal Luxe</span>
+              <span class="panel-look-mode">dark</span>
+            </div>
+          </div>
+          <div class="panel-mood">“Phosphor amber precision with tactile mechanical clicks”</div>
+        </div>
+
+        <!-- Subject Component Template (Identical markup across panels) -->
+        <div class="panel-subject-stage">
+          
+  <div class="template-music">
+    <!-- Player Bar -->
+    <div class="music-player-bar">
+      <div class="player-left">
+        <div class="player-thumb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
+        <div class="player-meta">
+          <div class="player-title">Signal Chain</div>
+          <div class="player-artist">Monospaced CRT hi-fi console with real-time waveform readout</div>
+        </div>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="player-btn-icon" aria-label="Shuffle" title="Shuffle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Previous" title="Previous">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-play-btn" aria-label="Play">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Next" title="Next">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Repeat" title="Repeat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          </button>
+        </div>
+        <div class="player-scrubber">
+          <span class="player-time">02:41</span>
+          <div class="player-progress-track">
+            <div class="player-progress-fill" style="width: 64%;"></div>
+          </div>
+          <span class="player-time">04:15</span>
+        </div>
+      </div>
+      <div class="player-right">
+        <button class="btn-action primary">Initialize Bus</button>
+      </div>
+    </div>
+
+    <!-- Track List -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Queue & Recent Tracks</h3>
+        <span class="section-badge">4 Selected</span>
+      </div>
+      <div class="track-list">
+        <div class="track-row">
+          <span class="track-num">01</span>
+          <div class="track-info">
+            <div class="track-name">Midnight Velocity</div>
+            <div class="track-sub">Auteur Lab • Electric Cut</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">03:24</span>
+        </div>
+        <div class="track-row active">
+          <span class="track-num">02</span>
+          <div class="track-info">
+            <div class="track-name">Phosphor Synthesis</div>
+            <div class="track-sub">Monad Sync • CRT Tone</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">04:12</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">03</span>
+          <div class="track-info">
+            <div class="track-name">Brutalist Rhythm</div>
+            <div class="track-sub">Studio Grid • 120 BPM</div>
+          </div>
+          <span class="track-album">Form Follows Rhythm</span>
+          <span class="track-duration">02:58</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">04</span>
+          <div class="track-info">
+            <div class="track-name">Subtle Typographies</div>
+            <div class="track-sub">Editorial Sound • Slow Press</div>
+          </div>
+          <span class="track-album">Liner Notes</span>
+          <span class="track-duration">05:03</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Album Grid -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Featured Releases</h3>
+      </div>
+      <div class="album-grid">
+        <div class="album-card">
+          <div class="album-cover cover-1">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LP</span>
+          </div>
+          <div class="album-title">Analog Architecture</div>
+          <div class="album-meta">8 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-2">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">EP</span>
+          </div>
+          <div class="album-title">Harmonic Precision</div>
+          <div class="album-meta">12 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-3">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LIVE</span>
+          </div>
+          <div class="album-title">Monochrome Suite</div>
+          <div class="album-meta">10 Tracks • 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="panel-footer">
+          <div class="panel-id-display">
+            <span class="panel-id-label">Direction ID</span>
+            <code class="panel-id-code">terminal-hifi</code>
+          </div>
+          <button
+            class="panel-select-trigger"
+            type="button"
+            onclick="event.stopPropagation(); selectPanel(4, 'terminal-hifi')"
+          >
+            Select [4]
+          </button>
+        </div>
+      </section>
+    
+
+      <section
+        class="direction-panel"
+        id="panel-paper-acoustics"
+        data-index="5"
+        data-direction-id="paper-acoustics"
+        data-look="paper-editorial"
+        data-personality="editorial"
+        data-sound-kit="paper-turn"
+        data-sound-vol="0.1"
+        style="--color-bg: oklch(0.96 0.015 85); --color-surface: oklch(0.98 0.01 85); --color-border: oklch(0.85 0.02 85); --color-fg: oklch(0.18 0.02 50); --color-fg-muted: oklch(0.45 0.025 50); --color-accent: oklch(0.48 0.12 35); --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', Cambria, serif; --font-text: 'EB Garamond', Georgia, 'Times New Roman', Cambria, serif; --font-mono: 'Space Mono', 'SF Mono', Monaco, Menlo, Consolas, monospace; --type-scale: 1.25; --radius-none: 0px; --radius-sm: 3px; --radius-md: 6px; --radius-lg: 12px; --radius-full: 9999px; --space-base: 8px; --motion-ease: cubic-bezier(0.16, 1, 0.3, 1); --motion-dur-fast: 250ms; --motion-dur-normal: 500ms; --motion-dur-slow: 1000ms; --motion-stagger: 60ms;"
+        tabindex="0"
+        aria-label="Direction 5: Chamber Monograph"
+        onclick="selectPanel(5, 'paper-acoustics')"
+      >
+        <!-- Panel Header -->
+        <div class="panel-header">
+          <div class="panel-header-top">
+            <span class="panel-badge-num">5</span>
+            <div class="panel-look-info">
+              <span class="panel-look-tag">Paper Editorial</span>
+              <span class="panel-look-mode">light</span>
+            </div>
+          </div>
+          <div class="panel-mood">“Tactile editorial calm with generous typographic margins”</div>
+        </div>
+
+        <!-- Subject Component Template (Identical markup across panels) -->
+        <div class="panel-subject-stage">
+          
+  <div class="template-music">
+    <!-- Player Bar -->
+    <div class="music-player-bar">
+      <div class="player-left">
+        <div class="player-thumb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
+        <div class="player-meta">
+          <div class="player-title">Chamber Monograph</div>
+          <div class="player-artist">Classical acoustic pressings bound on warm cotton spreads</div>
+        </div>
+      </div>
+      <div class="player-center">
+        <div class="player-controls">
+          <button class="player-btn-icon" aria-label="Shuffle" title="Shuffle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Previous" title="Previous">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-play-btn" aria-label="Play">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Next" title="Next">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"></line></svg>
+          </button>
+          <button class="player-btn-icon" aria-label="Repeat" title="Repeat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          </button>
+        </div>
+        <div class="player-scrubber">
+          <span class="player-time">02:41</span>
+          <div class="player-progress-track">
+            <div class="player-progress-fill" style="width: 64%;"></div>
+          </div>
+          <span class="player-time">04:15</span>
+        </div>
+      </div>
+      <div class="player-right">
+        <button class="btn-action primary">Read Folio</button>
+      </div>
+    </div>
+
+    <!-- Track List -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Queue & Recent Tracks</h3>
+        <span class="section-badge">4 Selected</span>
+      </div>
+      <div class="track-list">
+        <div class="track-row">
+          <span class="track-num">01</span>
+          <div class="track-info">
+            <div class="track-name">Midnight Velocity</div>
+            <div class="track-sub">Auteur Lab • Electric Cut</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">03:24</span>
+        </div>
+        <div class="track-row active">
+          <span class="track-num">02</span>
+          <div class="track-info">
+            <div class="track-name">Phosphor Synthesis</div>
+            <div class="track-sub">Monad Sync • CRT Tone</div>
+          </div>
+          <span class="track-album">Monograph Vol. 1</span>
+          <span class="track-duration">04:12</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">03</span>
+          <div class="track-info">
+            <div class="track-name">Brutalist Rhythm</div>
+            <div class="track-sub">Studio Grid • 120 BPM</div>
+          </div>
+          <span class="track-album">Form Follows Rhythm</span>
+          <span class="track-duration">02:58</span>
+        </div>
+        <div class="track-row">
+          <span class="track-num">04</span>
+          <div class="track-info">
+            <div class="track-name">Subtle Typographies</div>
+            <div class="track-sub">Editorial Sound • Slow Press</div>
+          </div>
+          <span class="track-album">Liner Notes</span>
+          <span class="track-duration">05:03</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Album Grid -->
+    <div class="music-section">
+      <div class="section-header">
+        <h3 class="section-title">Featured Releases</h3>
+      </div>
+      <div class="album-grid">
+        <div class="album-card">
+          <div class="album-cover cover-1">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LP</span>
+          </div>
+          <div class="album-title">Analog Architecture</div>
+          <div class="album-meta">8 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-2">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">EP</span>
+          </div>
+          <div class="album-title">Harmonic Precision</div>
+          <div class="album-meta">12 Tracks • 2026</div>
+        </div>
+        <div class="album-card">
+          <div class="album-cover cover-3">
+            <div class="cover-pattern"></div>
+            <span class="cover-tag">LIVE</span>
+          </div>
+          <div class="album-title">Monochrome Suite</div>
+          <div class="album-meta">10 Tracks • 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+        </div>
+
+        <!-- Panel Footer -->
+        <div class="panel-footer">
+          <div class="panel-id-display">
+            <span class="panel-id-label">Direction ID</span>
+            <code class="panel-id-code">paper-acoustics</code>
+          </div>
+          <button
+            class="panel-select-trigger"
+            type="button"
+            onclick="event.stopPropagation(); selectPanel(5, 'paper-acoustics')"
+          >
+            Select [5]
+          </button>
+        </div>
+      </section>
+    
+  </main>
+
+  <!-- Host Sticky Footer -->
+  <footer class="host-footer">
+    <div class="host-reply-prompt">
+      <span>Reply with <span class="host-kbd-badge">1–5</span> to select a direction.</span>
+    </div>
+    <div class="host-controls-guide">
+      <span>Keyboard numbers <span class="host-kbd-badge">1</span>–<span class="host-kbd-badge">5</span> highlight & copy direction ID</span>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-banner">
+    <span id="toast-msg">Direction selected</span>
+  </div>
+
+  <script>
+    // State
+    let soundEnabled = false;
+    let audioCtx = null;
+    let toastTimeout = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('sound-toggle');
+      const icon = document.getElementById('sound-icon');
+      const label = document.getElementById('sound-label');
+
+      if (soundEnabled) {
+        btn.classList.add('active');
+        icon.textContent = '🔊';
+        label.textContent = 'Sound: On';
+        getAudioContext();
+        playSound('bubble-pop', 0.2);
+        showToast('Sound enabled: synthesized WebAudio blips active');
+      } else {
+        btn.classList.remove('active');
+        icon.textContent = '🔇';
+        label.textContent = 'Sound: Off';
+        showToast('Sound muted');
+      }
+    }
+
+    function playSound(kit, volume) {
+      if (!soundEnabled) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      const vol = ctx.createGain();
+      const targetVol = (typeof volume === 'number' && !isNaN(volume)) ? volume : 0.2;
+      vol.gain.setValueAtTime(targetVol * 0.4, now);
+      vol.connect(ctx.destination);
+
+      switch (kit) {
+        case 'bubble-pop': {
+          const osc = ctx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.04);
+          vol.gain.setValueAtTime(targetVol * 0.5, now);
+          vol.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.connect(vol);
+          osc.start(now);
+          osc.stop(now + 0.06);
+          break;
+        }
+        case 'minimal-click': {
+          const osc = ctx.createOscillator();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(1200, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.008);
+          vol.gain.setValueAtTime(targetVol * 0.4, now);
+          vol.gain.exponentialRampToValueAtTime(0.001, now + 0.012);
+          osc.connect(vol);
+          osc.start(now);
+          osc.stop(now + 0.012);
+          break;
+        }
+        case 'warm-thud': {
+          const osc = ctx.createOscillator();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(45, now + 0.07);
+          vol.gain.setValueAtTime(targetVol * 0.5, now);
+          vol.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.connect(vol);
+          osc.start(now);
+          osc.stop(now + 0.08);
+          break;
+        }
+        case 'mechanical-switch': {
+          const osc = ctx.createOscillator();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(2400, now);
+          osc.frequency.exponentialRampToValueAtTime(400, now + 0.015);
+          vol.gain.setValueAtTime(targetVol * 0.35, now);
+          vol.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+          osc.connect(vol);
+          osc.start(now);
+          osc.stop(now + 0.018);
+          break;
+        }
+        case 'paper-rustle':
+        default: {
+          const bufferSize = Math.floor(ctx.sampleRate * 0.05);
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+          }
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(800, now);
+          vol.gain.setValueAtTime(targetVol * 0.3, now);
+          vol.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          noise.connect(filter);
+          filter.connect(vol);
+          noise.start(now);
+          noise.stop(now + 0.05);
+          break;
+        }
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      msg.textContent = message;
+      toast.classList.add('show');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function selectPanel(index, id) {
+      const panels = document.querySelectorAll('.direction-panel');
+      let targetPanel = null;
+
+      panels.forEach((p) => {
+        const pIdx = parseInt(p.getAttribute('data-index'), 10);
+        if (pIdx === index) {
+          p.classList.add('is-selected');
+          targetPanel = p;
+          p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          p.classList.remove('is-selected');
+        }
+      });
+
+      if (targetPanel) {
+        const kit = targetPanel.getAttribute('data-sound-kit');
+        const vol = parseFloat(targetPanel.getAttribute('data-sound-vol') || '0.2');
+        playSound(kit, vol);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(id).then(() => {
+          showToast('Selected [' + index + '] (' + id + ') — ID copied! Reply with ' + index + ' in prompt.');
+        }).catch(() => {
+          showToast('Selected [' + index + '] (' + id + ') — Reply with ' + index + ' in prompt.');
+        });
+      } else {
+        showToast('Selected [' + index + '] (' + id + ') — Reply with ' + index + ' in prompt.');
+      }
+    }
+
+    // Keyboard navigation: 1-5
+    document.addEventListener('keydown', (e) => {
+      // Don't intercept if user is typing in an input
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+
+      const key = e.key;
+      if (['1', '2', '3', '4', '5'].includes(key)) {
+        const idx = parseInt(key, 10);
+        const panel = document.querySelector('.direction-panel[data-index="' + idx + '"]');
+        if (panel) {
+          const id = panel.getAttribute('data-direction-id');
+          selectPanel(idx, id);
+        }
+      }
+    });
+
+    // Offline Font Resilience verification
+    if (window.FontFaceSet && document.fonts) {
+      document.fonts.ready.catch((err) => {
+        console.warn('[auteur-ui] External fonts failed to load; using local system font stack.', err);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -43,3 +43,4 @@ No proprietary code or copyrighted web assets are bundled at runtime. Aesthetic 
 5. **`paper-editorial`**:
    - Lineage: Book spread composition, unbleached cotton paper stock, generous editorial margins, terracotta wax seal accents.
    - Reference anchors: *The New Yorker*, *Kinfolk*, *Cereal Magazine*.
+

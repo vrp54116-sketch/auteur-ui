@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { encode } from 'gpt-tokenizer';
 import { LookSchema, toContract } from '../packages/schema/look.js';
@@ -50,6 +50,20 @@ function runBudget(): void {
       tokens,
       limit: 300,
       passed: tokens <= 300,
+    });
+  }
+
+  // 3. Audit directions output budget (5 directions)
+  const directionsPath = join(root, 'tests', 'fixtures', 'directions.json');
+  if (existsSync(directionsPath)) {
+    const directionsRaw = readFileSync(directionsPath, 'utf-8');
+    const directionsTokens = encode(directionsRaw).length;
+
+    results.push({
+      target: 'directions output (5 directions)',
+      tokens: directionsTokens,
+      limit: 400,
+      passed: directionsTokens <= 400,
     });
   }
 

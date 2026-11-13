@@ -110,3 +110,4 @@ Sound: ${snd.kit} (${snd.enabled ? 'on' : 'off'}, vol ${snd.volume}) | events: $
 Layout: ${l.grid} | asymmetry ${l.asymmetry}
 Forbid: ${contract.forbid.join(', ')}`;
 }
+

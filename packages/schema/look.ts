@@ -59,3 +59,4 @@ export function toContract(look: Look, version: string | number = '0.1.0'): Cont
     version: look.version ?? version,
   };
 }
+

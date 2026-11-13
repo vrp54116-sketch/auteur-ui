@@ -1,0 +1,42 @@
+[
+  {
+    "id": "kinetic-groove",
+    "look": "kinetic-pop",
+    "headline": "Sonic Velocity",
+    "sub": "High-chroma streaming with instant track response",
+    "cta": "Start Listening",
+    "mood": "Playful electric rhythm with bouncy spring motion"
+  },
+  {
+    "id": "swiss-audio",
+    "look": "swiss-utility",
+    "headline": "Acoustic Metric",
+    "sub": "Zero-decoration player with dense telemetry and clean mono typography",
+    "cta": "Stream Now",
+    "mood": "Functionalist restraint and stark mathematical layout"
+  },
+  {
+    "id": "nocturne-sound",
+    "look": "nocturne-editorial",
+    "headline": "The Listening Room",
+    "sub": "Warm nighttime audio journal featuring longform liner notes",
+    "cta": "Enter Chamber",
+    "mood": "Deep darkroom warmth with graceful literary cadence"
+  },
+  {
+    "id": "terminal-hifi",
+    "look": "terminal-luxe",
+    "headline": "Signal Chain",
+    "sub": "Monospaced CRT hi-fi console with real-time waveform readout",
+    "cta": "Initialize Bus",
+    "mood": "Phosphor amber precision with tactile mechanical clicks"
+  },
+  {
+    "id": "paper-acoustics",
+    "look": "paper-editorial",
+    "headline": "Chamber Monograph",
+    "sub": "Classical acoustic pressings bound on warm cotton spreads",
+    "cta": "Read Folio",
+    "mood": "Tactile editorial calm with generous typographic margins"
+  }
+]
