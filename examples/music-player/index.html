@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auteur Monolith Audio // Terminal Luxe</title>
+  <style>
+    :root {
+      --bg: oklch(0.18 0.02 240);
+      --surface: oklch(0.22 0.02 240);
+      --surface-raised: oklch(0.26 0.025 240);
+      --border: oklch(0.35 0.03 240);
+      --fg: oklch(0.92 0.02 142);
+      --fg-muted: oklch(0.65 0.04 142);
+      --accent: oklch(0.85 0.22 142);
+      --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+    }
+
+    .brand h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    .telemetry {
+      font-size: 12px;
+      color: var(--fg-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 148px);
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--fg-muted);
+      margin-bottom: 12px;
+    }
+
+    .channel-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .channel-btn {
+      width: 100%;
+      min-height: 44px;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--fg);
+      font-family: inherit;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .channel-btn:hover {
+      background: var(--surface-raised);
+      border-color: var(--border);
+    }
+
+    .channel-btn.active {
+      background: var(--surface-raised);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .deck-area {
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      overflow-y: auto;
+    }
+
+    .hero-strip {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 24px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .now-playing-meta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+    }
+
+    .track-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .track-artist {
+      font-size: 15px;
+      color: var(--fg-muted);
+    }
+
+    .oscilloscope-box {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      height: 140px;
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+      gap: 4px;
+    }
+
+    .bar {
+      flex: 1;
+      background: var(--accent);
+      height: 30%;
+      opacity: 0.85;
+      transition: height 0.12s ease;
+    }
+
+    .track-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .track-table th {
+      background: var(--surface-raised);
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--fg-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .track-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .track-row {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .track-row:hover {
+      background: var(--surface-raised);
+    }
+
+    footer.player-bar {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 16px 24px;
+      display: grid;
+      grid-template-columns: 280px 1fr 240px;
+      align-items: center;
+      gap: 24px;
+      min-height: 84px;
+    }
+
+    @media (max-width: 800px) {
+      footer.player-bar {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    .controls-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ctrl-btn {
+      min-width: 44px;
+      min-height: 44px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      color: var(--fg);
+      font-family: inherit;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 8px 16px;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .ctrl-btn:hover {
+      background: var(--border);
+    }
+
+    .ctrl-btn.primary {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      border-color: var(--accent);
+    }
+
+    .progress-bar {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--fg-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rail {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .fill {
+      width: 42%;
+      height: 100%;
+      background: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <h1>Auteur Audio // Core V0.1</h1>
+    </div>
+    <div class="telemetry">
+      SAMPLE RATE: 48.0 kHz // BUFFER: 128 SAMPLES // LATENCY: 2.6ms
+    </div>
+  </header>
+
+  <main>
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Synthesizer Channels</div>
+        <ul class="channel-list">
+          <li><button class="channel-btn active" aria-label="Select Channel 01 Telemetry">01 // KINETIC TELEMETRY <span>[LIVE]</span></button></li>
+          <li><button class="channel-btn" aria-label="Select Channel 02 Ambient Dark">02 // NOCTURNE FREQUENCIES <span>[STBY]</span></button></li>
+          <li><button class="channel-btn" aria-label="Select Channel 03 Modular Wave">03 // MODULAR PULSE <span>[STBY]</span></button></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">System Status</div>
+        <p style="font-size: 12px; color: var(--fg-muted); line-height: 1.6;">
+          Engine operating at zero runtime network. Procedural sound generated via Web Audio oscillator network.
+        </p>
+      </div>
+    </aside>
+
+    <section class="deck-area">
+      <div class="hero-strip">
+        <div class="now-playing-meta">
+          <div class="badge-live">Channel Active</div>
+          <div class="track-title" id="track-name">Stochastic Resonance in C Minor</div>
+          <div class="track-artist">System Protocol 09 // 132 BPM</div>
+        </div>
+        <div class="oscilloscope-box" aria-hidden="true" id="bars-box">
+          <div class="bar" style="height: 45%;"></div>
+          <div class="bar" style="height: 70%;"></div>
+          <div class="bar" style="height: 30%;"></div>
+          <div class="bar" style="height: 85%;"></div>
+          <div class="bar" style="height: 60%;"></div>
+          <div class="bar" style="height: 40%;"></div>
+          <div class="bar" style="height: 95%;"></div>
+          <div class="bar" style="height: 50%;"></div>
+        </div>
+      </div>
+
+      <table class="track-table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Track Identity</th>
+            <th scope="col">Frequency</th>
+            <th scope="col">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="track-row">
+            <td>01</td>
+            <td>Stochastic Resonance in C Minor</td>
+            <td>440.0 Hz</td>
+            <td>04:18</td>
+          </tr>
+          <tr class="track-row">
+            <td>02</td>
+            <td>Phosphor Cascade Waveform</td>
+            <td>880.0 Hz</td>
+            <td>03:42</td>
+          </tr>
+          <tr class="track-row">
+            <td>03</td>
+            <td>Sub-Harmonic Lattice Drift</td>
+            <td>220.0 Hz</td>
+            <td>05:04</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="player-bar">
+    <div>
+      <div style="font-size: 13px; font-weight: 700;">Stochastic Resonance</div>
+      <div style="font-size: 11px; color: var(--fg-muted);">System Protocol 09</div>
+    </div>
+
+    <div class="controls-center">
+      <div class="btn-group">
+        <button class="ctrl-btn" id="prev-btn" aria-label="Previous Track">PREV</button>
+        <button class="ctrl-btn primary" id="play-btn" aria-label="Toggle Playback">PLAY</button>
+        <button class="ctrl-btn" id="next-btn" aria-label="Next Track">NEXT</button>
+      </div>
+      <div class="progress-bar">
+        <span>01:48</span>
+        <div class="rail" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42" aria-label="Playback timeline">
+          <div class="fill"></div>
+        </div>
+        <span>04:18</span>
+      </div>
+    </div>
+
+    <div style="text-align: right; font-size: 11px; color: var(--fg-muted);">
+      TASTE CONTRACT: <span style="color: var(--accent);">TERMINAL-LUXE</span>
+    </div>
+  </footer>
+
+  <script>
+    // Procedural Web Audio Click Synthesizer
+    let audioCtx = null;
+    function playClick(freq = 800) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    const playBtn = document.getElementById('play-btn');
+    let isPlaying = false;
+    playBtn.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      playBtn.textContent = isPlaying ? 'PAUSE' : 'PLAY';
+      playClick(isPlaying ? 1200 : 600);
+    });
+
+    document.querySelectorAll('.ctrl-btn, .channel-btn, .track-row').forEach(el => {
+      el.addEventListener('click', () => playClick(880));
+    });
+
+    // Bar animation
+    const bars = document.querySelectorAll('.bar');
+    setInterval(() => {
+      if (isPlaying) {
+        bars.forEach(b => {
+          b.style.height = (20 + Math.random() * 75) + '%';
+        });
+      }
+    }, 150);
+  </script>
+</body>
+</html>

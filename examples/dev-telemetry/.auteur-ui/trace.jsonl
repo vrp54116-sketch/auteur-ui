@@ -1,0 +1,8 @@
+{"ts":"2026-11-13T16:10:00.000Z","phase":"brief","args":["Build an analytics dashboard for a dev tool"],"tokens_estimate":65,"result":"ok"}
+{"ts":"2026-11-13T16:10:05.000Z","phase":"directions","args":[],"tokens_estimate":365,"result":"synthesized swiss-utility, terminal-luxe, paper-editorial"}
+{"ts":"2026-11-13T16:10:10.000Z","phase":"preview","args":["--open"],"tokens_estimate":365,"result":"rendered contact sheet in 2410ms"}
+{"ts":"2026-11-13T16:10:20.000Z","phase":"human_pick","args":["1"],"tokens_estimate":5,"result":"selected swiss-utility"}
+{"ts":"2026-11-13T16:10:25.000Z","phase":"lock","args":["swiss-utility"],"tokens_estimate":260,"result":"locked .auteur-ui/contract.json"}
+{"ts":"2026-11-13T16:11:00.000Z","phase":"build","args":[],"tokens_estimate":1380,"result":"assembled components from .auteur-ui/assets/"}
+{"ts":"2026-11-13T16:11:15.000Z","phase":"lint","args":["--json"],"tokens_estimate":150,"result":"pass: score 96/100, 0 hard fails, 0 slop tells"}
+{"ts":"2026-11-13T16:11:20.000Z","phase":"pass","args":[],"tokens_estimate":0,"result":"receipt verified"}

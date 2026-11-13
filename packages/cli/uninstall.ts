@@ -222,3 +222,4 @@ export function runUninstall(argv: string[] = []): void {
   console.log('\nUser files and git history remain untouched.');
   console.log('======================================================\n');
 }
+

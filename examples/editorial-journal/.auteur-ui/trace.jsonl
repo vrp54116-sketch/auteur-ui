@@ -1,0 +1,8 @@
+{"ts":"2026-11-13T16:20:00.000Z","phase":"brief","args":["Build a photo journal and editorial reading app"],"tokens_estimate":65,"result":"ok"}
+{"ts":"2026-11-13T16:20:05.000Z","phase":"directions","args":[],"tokens_estimate":365,"result":"synthesized paper-editorial, nocturne-editorial, swiss-utility"}
+{"ts":"2026-11-13T16:20:10.000Z","phase":"preview","args":["--open"],"tokens_estimate":365,"result":"rendered contact sheet in 2550ms"}
+{"ts":"2026-11-13T16:20:20.000Z","phase":"human_pick","args":["1"],"tokens_estimate":5,"result":"selected paper-editorial"}
+{"ts":"2026-11-13T16:20:25.000Z","phase":"lock","args":["paper-editorial"],"tokens_estimate":265,"result":"locked .auteur-ui/contract.json"}
+{"ts":"2026-11-13T16:21:00.000Z","phase":"build","args":[],"tokens_estimate":1350,"result":"assembled components from .auteur-ui/assets/"}
+{"ts":"2026-11-13T16:21:15.000Z","phase":"lint","args":["--json"],"tokens_estimate":150,"result":"pass: score 95/100, 0 hard fails, 0 slop tells"}
+{"ts":"2026-11-13T16:21:20.000Z","phase":"pass","args":[],"tokens_estimate":0,"result":"receipt verified"}

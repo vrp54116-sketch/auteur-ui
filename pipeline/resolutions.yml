@@ -1,0 +1,18 @@
+# pipeline/resolutions.yml
+# Manual taste conflict resolutions.
+# DO NOT auto-resolve taste conflicts.
+# Allowed resolution modes:
+#   - keep: retain specified rule_id, discard opposing rule
+#   - drop: discard both conflicting rules
+#   - context-conditional: retain rules conditionally based on active look/preset
+#
+# Format:
+# resolutions:
+#   - conflict_id: "conflict-gradient-usage"
+#     resolution: context-conditional # keep | drop | context-conditional
+#     target_rule_id: "slop/purple-blue-gradient" # optional if keep
+#     condition: "Monochromatic neutral surfaces required in swiss/editorial looks; mesh gradients permitted strictly on hero cards in kinetic looks."
+#     notes: "Resolved by human editor."
+
+resolutions: []
+

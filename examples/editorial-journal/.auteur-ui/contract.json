@@ -1,0 +1,59 @@
+{
+  "look": "paper-editorial",
+  "version": "0.1.0",
+  "type": {
+    "display": "Newsreader, 'Charter', 'Source Serif Pro', Georgia, serif",
+    "text": "Newsreader, 'Charter', 'Source Serif Pro', Georgia, serif",
+    "mono": "'JetBrains Mono', Menlo, monospace",
+    "scale": 1.333,
+    "opticalSizing": "auto"
+  },
+  "palette": {
+    "id": "warm-paper",
+    "mode": "light",
+    "tokens": {
+      "bg": "oklch(0.965 0.015 85)",
+      "surface": "oklch(0.985 0.01 85)",
+      "border": "oklch(0.85 0.02 85)",
+      "fg": "oklch(0.22 0.03 55)",
+      "fgMuted": "oklch(0.48 0.04 60)",
+      "accent": "oklch(0.52 0.16 38)"
+    }
+  },
+  "space": {
+    "base": 8,
+    "rhythm": "print"
+  },
+  "radius": {
+    "strategy": "mixed",
+    "values": {
+      "card": "2px",
+      "button": "2px",
+      "input": "2px",
+      "badge": "2px"
+    }
+  },
+  "motion": {
+    "personality": "editorial",
+    "ease": "cubic-bezier(0.25, 0.1, 0.25, 1.0)",
+    "dur": [180, 360, 720],
+    "stagger": 35
+  },
+  "sound": {
+    "kit": "analog-tape",
+    "events": ["page-turn", "bookmark"],
+    "volume": 0.2,
+    "enabled": true
+  },
+  "layout": {
+    "grid": "editorial-asymmetric",
+    "asymmetry": 0.35
+  },
+  "forbid": [
+    "pure-black-surfaces",
+    "inter-roboto-default",
+    "centered-hero-3-cards",
+    "emoji-icons",
+    "uniform-radius"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "look": "swiss-utility",
+  "version": "0.1.0",
+  "type": {
+    "display": "Geist, -apple-system, BlinkMacSystemFont, sans-serif",
+    "text": "Geist, -apple-system, BlinkMacSystemFont, sans-serif",
+    "mono": "Geist Mono, ui-monospace, SFMono-Regular, monospace",
+    "scale": 1.25,
+    "opticalSizing": "auto"
+  },
+  "palette": {
+    "id": "swiss-mono",
+    "mode": "light",
+    "tokens": {
+      "bg": "oklch(0.985 0 0)",
+      "surface": "oklch(1 0 0)",
+      "border": "oklch(0.88 0 0)",
+      "fg": "oklch(0.18 0 0)",
+      "fgMuted": "oklch(0.48 0 0)",
+      "accent": "oklch(0.55 0.22 25)"
+    }
+  },
+  "space": {
+    "base": 4,
+    "rhythm": "dense"
+  },
+  "radius": {
+    "strategy": "sharp",
+    "values": {
+      "card": "0px",
+      "button": "0px",
+      "input": "0px",
+      "badge": "0px"
+    }
+  },
+  "motion": {
+    "personality": "restrained",
+    "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "dur": [120, 180, 240],
+    "stagger": 25
+  },
+  "sound": {
+    "kit": "minimal-click",
+    "events": ["click", "toggle"],
+    "volume": 0.2,
+    "enabled": true
+  },
+  "layout": {
+    "grid": "dense-12",
+    "asymmetry": 0.15
+  },
+  "forbid": [
+    "border-radius (>0px)",
+    "diffuse-drop-shadows",
+    "gradient-fills",
+    "centered-hero-3-cards",
+    "emoji-icons"
+  ]
+}

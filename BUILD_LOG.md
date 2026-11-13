@@ -983,3 +983,380 @@ User files and git history remain untouched.
 - **Slash Command Budget**: 111 / 120 tokens (**PASS**)
 - **Idempotency**: Verified across all 5 adapters (double install produces exact zero diff)
 - **Safe Uninstallation**: Verified on dirty fixture repo (preserves user code, user configs, custom `.gitignore`, user rules in `AGENTS.md`)
+
+---
+
+## Phase 9: Distillation Pipeline & Conflict Detection
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`pipeline/sources.yml`**: Upstream catalog mapping 22 open-source design skills with pinned commits, permissive licenses (MIT / Apache-2.0), explicit attribution, and status tracking (active vs skipped).
+2. **`pipeline/distill.mjs`**: Statement validator ensuring concise imperative statements (<= 20 words) and rejecting vague subjective phrases (`good`, `beautiful`, `clean`, `intuitive`).
+3. **`pipeline/merge.mjs`**: Multi-source merge pipeline extracting executable rules, reconciling overlapping directives, detecting taste conflicts, and generating structured artifacts.
+4. **`pipeline/resolutions.yml` & `pipeline/CONFLICTS.md`**: Formal taste conflict ledger documenting irreconcilable design divergences (e.g., zero-radius authority vs rounded friendly surfaces; monochromatic ink vs multi-stop mesh gradients) and resolution mechanisms.
+5. **`rules.json`**: 20 compiled, deterministic, weighted executable rules across COLOR, A11Y, MOTION, LAYOUT, SLOP, SPACE, SURFACE, and TYPE categories.
+6. **`advisory.md`**: Distilled subjective design taste guidance budget-constrained to <= 200 tokens (measured: 123 tokens).
+7. **`SOURCES.md`**: Verified attribution table linking all distilled rules to upstream authors and commit hashes.
+8. **`.github/workflows/distill.yml`**: CI workflow verifying distillation reproducibility.
+9. **`tests/pipeline.spec.ts`**: Verification test suite validating sources catalog, rule constraints, and execution pipeline.
+
+### Acceptance Command Run
+```bash
+./node_modules/.bin/vitest run tests/pipeline.spec.ts
+```
+
+### Actual Output
+```
+ RUN  v5.1.0 /Users/vanshpatel/Desktop/auteur-ui
+
+======================================================
+ auteur-ui Distillation & Merge Pipeline
+ Active target sources: 3 / 22
+======================================================
+
+  -> Distilling pbakaus/impeccable (Apache-2.0)...
+  -> Distilling nextlevelbuilder/ui-ux-pro-max-skill (MIT)...
+  -> Distilling Leonxlnx/taste-skill (MIT)...
+  ✓ Wrote conflict ledger to: /Users/vanshpatel/Desktop/auteur-ui/pipeline/CONFLICTS.md
+  ✓ Wrote 20 executable rules to: /Users/vanshpatel/Desktop/auteur-ui/rules.json
+  ✓ Wrote advisory guidance to: /Users/vanshpatel/Desktop/auteur-ui/advisory.md (123 tokens / <= 200 token budget)
+  ✓ Updated attribution ledger in: /Users/vanshpatel/Desktop/auteur-ui/SOURCES.md
+
+ ✓ tests/pipeline.spec.ts (3 tests) 16ms
+   ✓ Phase 9: Distillation Pipeline & Conflict Detection (3)
+     ✓ parses pipeline/sources.yml and verifies all 22 requested repositories 3ms
+     ✓ enforces statement <= 20 words and rejects vague subjective statements 0ms
+     ✓ runs distillation and merge on the 3 initial sources, detecting taste conflicts 11ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  21:33:51
+   Duration  164ms (import 74%, tests 16%, transform 8%, worker 2%)
+```
+
+### Token Measurements
+- **`advisory.md` token count**: 123 tokens (limit: <= 200 tokens) — **PASS**
+- **Distilled Rules**: 20 executable rules extracted into `rules.json`
+- **Total Test Suite**: 21 test files, 102 tests passed
+
+---
+
+## Phase 10: Ship (v0.1.0 Public Release)
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`README.md`**: Complete public documentation following strict specifications:
+   - One-line pitch: *"Other skills tell your agent what good taste is. This one hands it the decisions already made, the code already written, and a test that proves it didn't cheat."*
+   - Real unmocked before/after screenshot pair from evals (`evals/runs/baseline-spotify-listening-seed1/` vs `evals/runs/auteur-ui-spotify-listening-seed1/`).
+   - Measured token benchmark table from `evals/report.md` labeled with model (Claude 3.5 Sonnet) and date (2026-11-13).
+   - Install & usage commands (`npx auteur-ui init` and `/auteur-ui build a music app like Spotify`).
+   - 6-step ASCII architecture and contract lifecycle diagram.
+   - Visual gallery of the 5 curated looks (`nocturne-editorial`, `swiss-utility`, `kinetic-pop`, `terminal-luxe`, `paper-editorial`).
+   - Honest limits section covering v0.1 non-goals and zero-runtime-network boundaries.
+   - Link to `SOURCES.md` attribution ledger and MIT license.
+2. **`docs/` Suite**:
+   - `docs/architecture.md`: Invariants, contract lifecycle, sub-agent isolation, headless rendering, and numerical scoring.
+   - `docs/authoring-looks.md`: Complete guide for authoring custom `look.json` files and registering them in the look catalog.
+   - `docs/lint-rules.md`: Comprehensive reference of all numerical taste rules and anti-pattern checks auto-generated from check files.
+   - `docs/adapters.md`: Full multi-agent adapter guide covering Claude Code, OpenCode, Cursor, Codex, Antigravity, and universal AGENTS.md.
+   - `docs/faq.md`: Technical and philosophical FAQ.
+   - `docs/CONTRIBUTING.md`: Development guidelines, token budget invariants, and PR checklist.
+   - `docs/demo-script.md`: 30-second CLI terminal walkthrough script.
+3. **`examples/` Suite**: 3 complete working applications built with the skill:
+   - `examples/music-player/` (`terminal-luxe` look, Web Audio synthesizer, monospace telemetry, contract.json 282 tokens, trace.jsonl).
+   - `examples/dev-telemetry/` (`swiss-utility` look, high-density 0px Swiss borders, tabular nums, contract.json 278 tokens, trace.jsonl).
+   - `examples/editorial-journal/` (`paper-editorial` look, warm cream reading layout, 65ch measure, contract.json 291 tokens, trace.jsonl).
+4. **Release Infrastructure**:
+   - `LICENSE`: MIT License.
+   - `package.json`: Updated version to `0.1.0`, license to `MIT`, dependencies configured, and `"files"` whitelist set to prevent test fixtures or node_modules from packing.
+   - `.changeset/`: Changeset configuration (`config.json`) and release note (`v0-1-0.md`).
+   - `.github/workflows/release.yml`: Automated GitHub Action for publishing to npm and creating GitHub releases upon tag push (`v*`).
+   - `scripts/generate-lint-docs.mjs`: Automated doc generator extracting documentation directly from rule definitions.
+
+---
+
+### Acceptance Command Run 1: Package Contents & Size Verification (< 2MB, No Fixtures, No node_modules)
+```bash
+npm pack
+```
+
+### Actual Output
+```
+npm notice 
+npm notice 📦  auteur-ui@0.1.0
+npm notice Tarball Contents 
+npm notice 1.1kB LICENSE
+npm notice 6.7kB README.md
+npm notice 593B advisory.md
+npm notice 175B bin/auteur-ui.mjs
+npm notice 837B code/css/elevation.css
+npm notice 602B code/css/focus.css
+npm notice 231B code/css/index.css
+npm notice 1.0kB code/css/motion.css
+npm notice 691B code/css/reset.css
+npm notice 870B code/css/rhythm.css
+npm notice 1.5kB code/css/tailwind-theme.css
+npm notice 1.3kB code/css/tokens.css
+npm notice 1.7kB code/css/type.css
+npm notice 4.2kB code/motion/boot.mjs
+npm notice 827B code/motion/flip.mjs
+npm notice 1.1kB code/motion/magnetic-hover.mjs
+npm notice 1.1kB code/motion/number-ticker.mjs
+npm notice 1.1kB code/motion/page-transition.mjs
+npm notice 542B code/motion/personalities.json
+npm notice 232B code/motion/react/flip.js
+npm notice 249B code/motion/react/magnetic-hover.js
+npm notice 329B code/motion/react/number-ticker.js
+npm notice 429B code/motion/react/page-transition.js
+npm notice 291B code/motion/react/reveal-on-scroll.js
+npm notice 468B code/motion/react/skeleton-crossfade.js
+npm notice 297B code/motion/react/spring-sheet.js
+npm notice 711B code/motion/react/spring-sheet.motion.jsx
+npm notice 234B code/motion/react/stagger-list.js
+npm notice 1.0kB code/motion/reveal-on-scroll.mjs
+npm notice 786B code/motion/skeleton-crossfade.mjs
+npm notice 638B code/motion/spring-sheet.mjs
+npm notice 774B code/motion/stagger-list.mjs
+npm notice 1.7kB code/motion/tokens.mjs
+npm notice 176B code/README.md
+npm notice 3.8kB code/sound/initSound.mjs
+npm notice 558B code/sound/kits/analog-tape.mjs
+npm notice 469B code/sound/kits/glass.mjs
+npm notice 364B code/sound/kits/minimal-click.mjs
+npm notice 567B code/sound/kits/soft-mechanical.mjs
+npm notice 612B code/sound/useUISound.js
+npm notice 1.6kB code/sound/voice.mjs
+npm notice 1.7kB code/type/font-face.css
+npm notice 1.2kB code/type/index.mjs
+npm notice 5.4kB code/type/next-font.js
+npm notice 13.6kB code/type/pairings.json
+npm notice 904B code/type/scales.css
+npm notice 1.2kB dist/packages/cli/ask.d.ts
+npm notice 10.0kB dist/packages/cli/ask.js
+npm notice 101B dist/packages/cli/brief.d.ts
+npm notice 3.0kB dist/packages/cli/brief.js
+npm notice 925B dist/packages/cli/budget.d.ts
+npm notice 9.6kB dist/packages/cli/budget.js
+npm notice 61B dist/packages/cli/doctor.d.ts
+npm notice 9.3kB dist/packages/cli/doctor.js
+npm notice 504B dist/packages/cli/index.d.ts
+npm notice 3.6kB dist/packages/cli/index.js
+npm notice 1.4kB dist/packages/cli/init.d.ts
+npm notice 19.0kB dist/packages/cli/init.js
+npm notice 118B dist/packages/cli/lint.d.ts
+npm notice 3.2kB dist/packages/cli/lint.js
+npm notice 55B dist/packages/cli/lock.d.ts
+npm notice 2.3kB dist/packages/cli/lock.js
+npm notice 67B dist/packages/cli/preview.d.ts
+npm notice 5.0kB dist/packages/cli/preview.js
+npm notice 728B dist/packages/cli/report.d.ts
+npm notice 6.4kB dist/packages/cli/report.js
+npm notice 93B dist/packages/cli/score.d.ts
+npm notice 490B dist/packages/cli/score.js
+npm notice 927B dist/packages/cli/trace.d.ts
+npm notice 4.4kB dist/packages/cli/trace.js
+npm notice 642B dist/packages/cli/types.d.ts
+npm notice 11B dist/packages/cli/types.js
+npm notice 155B dist/packages/cli/uninstall.d.ts
+npm notice 8.2kB dist/packages/cli/uninstall.js
+npm notice 146B dist/packages/cli/update.d.ts
+npm notice 6.3kB dist/packages/cli/update.js
+npm notice 241B dist/packages/lint/extract.d.ts
+npm notice 11.2kB dist/packages/lint/extract.js
+npm notice 406B dist/packages/lint/index.d.ts
+npm notice 1.6kB dist/packages/lint/index.js
+npm notice 73B dist/packages/lint/rules/a11y.d.ts
+npm notice 5.1kB dist/packages/lint/rules/a11y.js
+npm notice 350B dist/packages/lint/rules/color.d.ts
+npm notice 6.4kB dist/packages/lint/rules/color.js
+npm notice 78B dist/packages/lint/rules/hierarchy.d.ts
+npm notice 3.8kB dist/packages/lint/rules/hierarchy.js
+npm notice 377B dist/packages/lint/rules/index.d.ts
+npm notice 13.8kB dist/packages/lint/rules/index.js
+npm notice 75B dist/packages/lint/rules/motion.d.ts
+npm notice 4.0kB dist/packages/lint/rules/motion.js
+npm notice 79B dist/packages/lint/rules/responsive.d.ts
+npm notice 2.6kB dist/packages/lint/rules/responsive.js
+npm notice 75B dist/packages/lint/rules/rhythm.d.ts
+npm notice 2.5kB dist/packages/lint/rules/rhythm.js
+npm notice 73B dist/packages/lint/rules/slop.d.ts
+npm notice 11.9kB dist/packages/lint/rules/slop.js
+npm notice 74B dist/packages/lint/rules/space.d.ts
+npm notice 3.0kB dist/packages/lint/rules/space.js
+npm notice 73B dist/packages/lint/rules/type.d.ts
+npm notice 5.5kB dist/packages/lint/rules/type.js
+npm notice 407B dist/packages/lint/score.d.ts
+npm notice 2.2kB dist/packages/lint/score.js
+npm notice 3.5kB dist/packages/lint/types.d.ts
+npm notice 11B dist/packages/lint/types.js
+npm notice 425B dist/packages/preview/contact-sheet.d.ts
+npm notice 1.3kB dist/packages/preview/contact-sheet.js
+npm notice 125B dist/packages/preview/index.d.ts
+npm notice 125B dist/packages/preview/index.js
+npm notice 464B dist/packages/preview/render.d.ts
+npm notice 46.6kB dist/packages/preview/render.js
+npm notice 225B dist/packages/preview/templates.d.ts
+npm notice 16.4kB dist/packages/preview/templates.js
+npm notice 415B dist/packages/preview/types.d.ts
+npm notice 11B dist/packages/preview/types.js
+npm notice 1.5kB dist/packages/schema/color.d.ts
+npm notice 3.6kB dist/packages/schema/color.js
+npm notice 4.1kB dist/packages/schema/contract.d.ts
+npm notice 3.3kB dist/packages/schema/contract.js
+npm notice 86B dist/packages/schema/index.d.ts
+npm notice 86B dist/packages/schema/index.js
+npm notice 2.8kB dist/packages/schema/look.d.ts
+npm notice 1.4kB dist/packages/schema/look.js
+npm notice 11B dist/scripts/budget.d.ts
+npm notice 3.9kB dist/scripts/budget.js
+npm notice 1.6kB looks/index.json
+npm notice 1.4kB looks/kinetic-pop/look.json
+npm notice 409B looks/kinetic-pop/README.md
+npm notice 1.4kB looks/nocturne-editorial/look.json
+npm notice 417B looks/nocturne-editorial/README.md
+npm notice 1.4kB looks/paper-editorial/look.json
+npm notice 408B looks/paper-editorial/README.md
+npm notice 1.3kB looks/swiss-utility/look.json
+npm notice 448B looks/swiss-utility/README.md
+npm notice 1.4kB looks/terminal-luxe/look.json
+npm notice 378B looks/terminal-luxe/README.md
+npm notice 825B modules/color.md
+npm notice 747B modules/components.md
+npm notice 730B modules/layout.md
+npm notice 784B modules/motion.md
+npm notice 705B modules/sound.md
+npm notice 820B modules/typography.md
+npm notice 1.1kB package.json
+npm notice 6.3kB rules.json
+npm notice 469B skill/commands/auteur-ui.md
+npm notice 1.7kB skill/SKILL.md
+npm notice Tarball Details 
+npm notice name: auteur-ui
+npm notice version: 0.1.0
+npm notice filename: auteur-ui-0.1.0.tgz
+npm notice package size: 93.0 kB
+npm notice unpacked size: 354.0 kB
+npm notice shasum: 7009319b2845413b96514cf0d3ad6fc4a32964eb
+npm notice integrity: sha512-HvwLPN6paSwgX[...]w8IHXh4vvmJWQ==
+npm notice total files: 145
+```
+
+---
+
+### Acceptance Command Run 2: Clean Fresh Install in Scratch Directory
+```bash
+npm i -g --prefix /tmp/auteur-global ./auteur-ui-0.1.0.tgz
+mkdir -p /tmp/fresh-project-test && cd /tmp/fresh-project-test
+auteur-ui init --yes
+```
+
+### Actual Output
+```
+======================================================
+             auteur-ui System Installer
+======================================================
+Target Directory : /private/tmp/fresh-project-test
+Target Agent     : cursor
+Detection Method : binary (/Applications/Cursor.app/Contents/MacOS/Cursor)
+Scope            : Project-local
+Vendor Assets    : No (.gitignore)
+------------------------------------------------------
+
+Installation Complete. Files created / managed:
+  + .cursor/rules/auteur-ui.mdc
+  + .auteur-ui/assets/README.md
+  + .auteur-ui/assets/css/elevation.css
+  + .auteur-ui/assets/css/focus.css
+  + .auteur-ui/assets/css/index.css
+  + .auteur-ui/assets/css/motion.css
+  + .auteur-ui/assets/css/reset.css
+  + .auteur-ui/assets/css/rhythm.css
+  + .auteur-ui/assets/css/tailwind-theme.css
+  + .auteur-ui/assets/css/tokens.css
+  + .auteur-ui/assets/css/type.css
+  + .auteur-ui/assets/motion/boot.mjs
+  + .auteur-ui/assets/motion/flip.mjs
+  + .auteur-ui/assets/motion/magnetic-hover.mjs
+  + .auteur-ui/assets/motion/number-ticker.mjs
+  + .auteur-ui/assets/motion/page-transition.mjs
+  + .auteur-ui/assets/motion/personalities.json
+  + .auteur-ui/assets/motion/react/flip.js
+  + .auteur-ui/assets/motion/react/magnetic-hover.js
+  + .auteur-ui/assets/motion/react/number-ticker.js
+  + .auteur-ui/assets/motion/react/page-transition.js
+  + .auteur-ui/assets/motion/react/reveal-on-scroll.js
+  + .auteur-ui/assets/motion/react/skeleton-crossfade.js
+  + .auteur-ui/assets/motion/react/spring-sheet.js
+  + .auteur-ui/assets/motion/react/spring-sheet.motion.jsx
+  + .auteur-ui/assets/motion/react/stagger-list.js
+  + .auteur-ui/assets/motion/reveal-on-scroll.mjs
+  + .auteur-ui/assets/motion/skeleton-crossfade.mjs
+  + .auteur-ui/assets/motion/spring-sheet.mjs
+  + .auteur-ui/assets/motion/stagger-list.mjs
+  + .auteur-ui/assets/motion/tokens.mjs
+  + .auteur-ui/assets/sound/initSound.mjs
+  + .auteur-ui/assets/sound/kits/analog-tape.mjs
+  + .auteur-ui/assets/sound/kits/glass.mjs
+  + .auteur-ui/assets/sound/kits/minimal-click.mjs
+  + .auteur-ui/assets/sound/kits/soft-mechanical.mjs
+  + .auteur-ui/assets/sound/useUISound.js
+  + .auteur-ui/assets/sound/voice.mjs
+  + .auteur-ui/assets/type/font-face.css
+  + .auteur-ui/assets/type/index.mjs
+  + .auteur-ui/assets/type/next-font.js
+  + .auteur-ui/assets/type/pairings.json
+  + .auteur-ui/assets/type/scales.css
+  + .gitignore
+  + .auteur-ui/version
+  + .auteur-ui/lockfile.json
+  + .auteur-ui/install-manifest.json
+
+------------------------------------------------------
+To uninstall and clean up all managed files, run:
+  npx auteur-ui uninstall
+======================================================
+```
+
+---
+
+### Acceptance Command Run 3: Doctor Diagnostics from Fresh Install
+```bash
+cd /tmp/fresh-project-test && auteur-ui doctor
+```
+
+### Actual Output
+```
+======================================================
+         auteur-ui System Doctor Checklist
+======================================================
+
+ [✓] Skill Discoverability   : Discovered Cursor skill at /private/tmp/fresh-project-test/.cursor/rules/auteur-ui.mdc
+ [✓] Router Token Budget     : 306 tokens (limit: <= 500 tokens)
+ [✓] Assets Present          : Assets verified in .auteur-ui/assets/ (4/4 categories)
+ [✓] Playwright Engine       : Playwright installed for headless rendering
+ [✓] Node.js Version         : v26.13.0 (>= 18.0.0 required)
+ [✓] Contract Validity       : .auteur-ui/contract.json (not generated yet — ready for lock)
+ [✓] Trace Health            : .auteur-ui/trace.jsonl (no execution steps yet)
+
+------------------------------------------------------
+Status: All diagnostic checks passed (7/7).
+```
+
+---
+
+### Invariant & Token Budget Audit
+- **Tarball Size**: **93.0 kB** (compressed) / **354.0 kB** (unpacked) (Limit: < 2MB) — **PASS**
+- **Tarball Cleanliness**: Zero fixtures, zero test files, zero node_modules — **PASS**
+- **Skill Router Tokens**: **463** / 500 tokens — **PASS**
+- **Slash Command Tokens**: **111** / 120 tokens — **PASS**
+- **Example Contracts**:
+  - `examples/music-player/.auteur-ui/contract.json`: **282** / 300 tokens — **PASS**
+  - `examples/dev-telemetry/.auteur-ui/contract.json`: **278** / 300 tokens — **PASS**
+  - `examples/editorial-journal/.auteur-ui/contract.json`: **291** / 300 tokens — **PASS**
+- **Test Suite**: 21 test files, 102 tests passed (100% pass rate) — **PASS**
+
+

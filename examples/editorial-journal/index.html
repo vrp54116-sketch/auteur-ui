@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auteur Monograph // Paper Editorial</title>
+  <style>
+    :root {
+      --bg: oklch(0.965 0.015 85);
+      --surface: oklch(0.985 0.01 85);
+      --border: oklch(0.85 0.02 85);
+      --fg: oklch(0.22 0.03 55);
+      --fg-muted: oklch(0.48 0.04 60);
+      --accent: oklch(0.52 0.16 38);
+      --font-serif: "Newsreader", "Charter", "Source Serif Pro", Georgia, serif;
+      --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      background: var(--surface);
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      font-style: italic;
+    }
+
+    .issue-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+    }
+
+    .article-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px;
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 56px;
+    }
+
+    @media (max-width: 860px) {
+      .article-wrap {
+        grid-template-columns: 1fr;
+        padding: 32px 20px;
+        gap: 32px;
+      }
+    }
+
+    .reading-col {
+      max-width: 65ch;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .lead-kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1.story-headline {
+      font-size: 42px;
+      line-height: 1.15;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .byline-row {
+      display: flex;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fg-muted);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+
+    p.lead-paragraph {
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--fg);
+    }
+
+    p.body-text {
+      color: var(--fg);
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    .dropcap::first-letter {
+      float: left;
+      font-size: 64px;
+      line-height: 0.8;
+      padding-top: 4px;
+      padding-right: 12px;
+      padding-bottom: 4px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .plate-col {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .photo-plate {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .photo-box {
+      width: 100%;
+      height: 380px;
+      background: oklch(0.88 0.03 85);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-caption {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fg-muted);
+      line-height: 1.5;
+    }
+
+    .monograph-sidebar {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 24px;
+    }
+
+    .sidebar-heading {
+      font-size: 14px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+      color: var(--fg-muted);
+    }
+
+    .chapter-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 15px;
+    }
+
+    .chapter-link {
+      color: var(--fg);
+      text-decoration: none;
+      display: flex;
+      justify-content: space-between;
+      min-height: 44px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s ease;
+    }
+
+    .chapter-link:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">The Auteur Monograph</div>
+    <div class="issue-tag">N° 14 // Autumn Cadence</div>
+  </header>
+
+  <main class="article-wrap">
+    <article class="reading-col">
+      <div class="lead-kicker">Field Notes &amp; Typography</div>
+      <h1 class="story-headline">The Quiet Cadence of High-Latitude Architecture</h1>
+
+      <div class="byline-row">
+        <span>WORDS: ELENA VANCE</span>
+        <span>PHOTOGRAPHY: S. MORI</span>
+        <span>READING TIME: 6 MIN</span>
+      </div>
+
+      <p class="lead-paragraph">
+        On the northern coast of Hokkaido, the timber structures do not fight the winter wind; they yield to it with mathematical precision.
+      </p>
+
+      <p class="body-text dropcap">
+        Wandering through the coastal villages of Okhotsk in late November reveals an architectural restraint rarely found in contemporary cities. Here, every pitch of the roofline and every millimeter of sill exposure is dictated not by stylistic exuberance, but by snow load and thermal inertia. The visual language that emerges is quiet, spare, and entirely un-slapped by modern template conventions.
+      </p>
+
+      <p class="body-text">
+        In an era dominated by instantaneous digital surfaces, returning to tangible proportion offers an antidote to aesthetic fatigue. When text is constrained to sixty-five characters per line, the human eye scans with rhythmic grace rather than mechanical exhaustion. The margin is not empty space; it is the silence that allows the word to speak.
+      </p>
+    </article>
+
+    <aside class="plate-col">
+      <figure class="photo-plate">
+        <div class="photo-box" role="img" aria-label="Abstract timber architectural elevation against snow">
+          <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="40" width="200" height="160" stroke="oklch(0.52 0.16 38)" stroke-width="2"/>
+            <line x1="20" y1="120" x2="220" y2="120" stroke="oklch(0.48 0.04 60)" stroke-width="1"/>
+            <line x1="80" y1="40" x2="80" y2="200" stroke="oklch(0.48 0.04 60)" stroke-width="1"/>
+            <circle cx="150" cy="80" r="28" stroke="oklch(0.52 0.16 38)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <figcaption class="photo-caption">
+          PLATE IV: Elevation study of timber drying sheds, Abashiri Prefecture. Note the strict vertical grain alignment and zero-radius structural joins.
+        </figcaption>
+      </figure>
+
+      <div class="monograph-sidebar">
+        <div class="sidebar-heading">Monograph Index</div>
+        <ul class="chapter-list">
+          <li><a href="#plate-1" class="chapter-link"><span>01 // Thermal Inertia</span> <span>p. 04</span></a></li>
+          <li><a href="#plate-2" class="chapter-link"><span>02 // The Sixty-Five Measure</span> <span>p. 18</span></a></li>
+          <li><a href="#plate-3" class="chapter-link"><span>03 // Pigments of Okhotsk</span> <span>p. 32</span></a></li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+</body>
+</html>

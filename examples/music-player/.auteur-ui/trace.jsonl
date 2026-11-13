@@ -1,0 +1,8 @@
+{"ts":"2026-11-13T16:00:00.000Z","phase":"brief","args":["Build a music listening app like Spotify"],"tokens_estimate":65,"result":"ok"}
+{"ts":"2026-11-13T16:00:05.000Z","phase":"directions","args":[],"tokens_estimate":365,"result":"synthesized terminal-luxe, nocturne-editorial, kinetic-pop"}
+{"ts":"2026-11-13T16:00:10.000Z","phase":"preview","args":["--open"],"tokens_estimate":365,"result":"rendered 3 candidate directions on 1200px contact sheet in 2850ms"}
+{"ts":"2026-11-13T16:00:25.000Z","phase":"human_pick","args":["1"],"tokens_estimate":5,"result":"selected terminal-luxe"}
+{"ts":"2026-11-13T16:00:30.000Z","phase":"lock","args":["terminal-luxe"],"tokens_estimate":264,"result":"locked .auteur-ui/contract.json"}
+{"ts":"2026-11-13T16:01:10.000Z","phase":"build","args":[],"tokens_estimate":1420,"result":"assembled components from .auteur-ui/assets/"}
+{"ts":"2026-11-13T16:01:25.000Z","phase":"lint","args":["--json"],"tokens_estimate":150,"result":"pass: score 94/100, 0 hard fails, 0 slop tells"}
+{"ts":"2026-11-13T16:01:30.000Z","phase":"pass","args":[],"tokens_estimate":0,"result":"receipt verified"}

@@ -184,3 +184,4 @@ alwaysApply: false
 When no specific agent binary or config folder is detected, or when generic installation is requested:
 - Target: Managed block in `./AGENTS.md` enclosed by `<!-- auteur-ui:start -->` and `<!-- auteur-ui:end -->`.
 - Enables universal discovery across any agent adhering to the `AGENTS.md` standard.
+

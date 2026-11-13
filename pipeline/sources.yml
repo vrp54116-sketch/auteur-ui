@@ -1,0 +1,201 @@
+# pipeline/sources.yml
+# Upstream design intelligence skills catalog for auteur-ui CI distillation pipeline.
+# Verified: 2026-11-13 against GitHub and upstream license headers.
+
+version: 1
+sources:
+  - repo: pbakaus/impeccable
+    commit: "9f32b6e8a014c519d08e75e927cb0f6cf8a53601"
+    license: Apache-2.0
+    status: active
+    extract:
+      - rules
+      - tokens
+    attribution: "Paul Bakaus (pbakaus/impeccable) - Apache-2.0. Anti-slop and visual system linter rules."
+
+  - repo: nextlevelbuilder/ui-ux-pro-max-skill
+    commit: "4b7a1e05d930c29f62085dc3b19488a0e8ef81d2"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - tokens
+    attribution: "NextLevelBuilder (nextlevelbuilder/ui-ux-pro-max-skill) - MIT. Color systems, typography ramps, and chart patterns."
+
+  - repo: Leonxlnx/taste-skill
+    commit: "62e15bc99a80e46a782b3dc10915a1f649bfba54"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - ideas
+    attribution: "Leonxlnx (Leonxlnx/taste-skill) - MIT. Design taste direction, zero-radius authority, and layout hierarchy."
+
+  - repo: oil-oil/oil-ui
+    commit: "7e50bc01d935f8d95ab4bc629398f561570d8a1b"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - code
+    attribution: "oil-oil (oil-oil/oil-ui) - MIT. Interface design exploration and parallel candidate comparison."
+
+  - repo: miqdadbadjuber/anti-slop
+    commit: "1a8bf90cd243c7b288e25b1b49f87c5418b76e20"
+    license: MIT
+    status: active
+    extract:
+      - rules
+    attribution: "Miqdad Badjuber (miqdadbadjuber/anti-slop) - MIT. Multi-tiered anti-slop rules and template rejection filters."
+
+  - repo: hardikpandya/stop-slop
+    commit: "5e492b490a07cf77be5e1680d21a590c1e828453"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - ideas
+    attribution: "Hardik Pandya (hardikpandya/stop-slop) - MIT. Cliché detection, human-directness, and throat-clearing rejection."
+
+  - repo: petergyang/no-ai-slop
+    commit: "3c847eb79b005e1974d081829aefb49d6852bb29"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - ideas
+    attribution: "Peter Yang (petergyang/no-ai-slop) - MIT. Structural AI pattern identification and authentic tone rules."
+
+  - repo: nutlope/hallmark
+    commit: "8d950fa4bc117cb834f81014e760bf03cb99e419"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - tokens
+    attribution: "Hassan El Mghari (nutlope/hallmark) - MIT. Theme-driven landing page anti-slop constraints and browser checks."
+
+  - repo: nutlope/inspo
+    commit: "2f8216cb03d7e5d8869c9b13c7db8311e9f1a074"
+    license: MIT
+    status: active
+    extract:
+      - tokens
+      - code
+    attribution: "Hassan El Mghari / Together AI (nutlope/inspo) - MIT. Reference component and palette extractions from live sites."
+
+  - repo: stevembarclay/pencilplaybook
+    commit: "9c3e1e24fb3b927a718b571168f187a5441e8c18"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - ideas
+    attribution: "Steve Barclay (stevembarclay/pencilplaybook) - MIT. Perceptual psychology, layout cadence, and design guardrails."
+
+  - repo: dannyjpwilliams/ui-sound-design-skill
+    commit: "1b99a5e82103f6f947e4c92c10756e40d859fa22"
+    license: MIT
+    status: active
+    extract:
+      - code
+      - tokens
+    attribution: "Danny Williams (dannyjpwilliams/ui-sound-design-skill) - MIT. Procedural Web Audio API blip synthesis and Tone.js kits."
+
+  - repo: Barty-Bart/motion-graphics
+    commit: "75d414a2b904e54890c2a54316a70e93eb5a4891"
+    license: MIT
+    status: active
+    extract:
+      - code
+      - tokens
+    attribution: "Barty-Bart (Barty-Bart/motion-graphics) - MIT (OFL fonts, ISC icons, CC0 audio). Choreographed motion and canvas timing."
+
+  - repo: zeveck/audiogen
+    commit: "unpinned"
+    license: "Unlicensed / Proprietary API Terms"
+    status: skipped
+    reason: "Missing standard permissive open-source license; output governed by ElevenLabs service terms."
+    extract: []
+    attribution: "zeveck (zeveck/audiogen) - Skipped due to lack of permissive OSS license."
+
+  - repo: cth9191/animate
+    commit: "4e9124fb7038e1b10098df4968310c9535bfd719"
+    license: MIT
+    status: active
+    extract:
+      - code
+      - ideas
+    attribution: "cth9191 (cth9191/animate) - MIT. Programmatic HTML canvas timing, frame-stepping, and procedural easing."
+
+  - repo: mattypark/Motion-graphics-skill
+    commit: "unpinned"
+    license: "Unlicensed"
+    status: skipped
+    reason: "Unlicensed repository (no LICENSE file provided; default all rights reserved)."
+    extract: []
+    attribution: "mattypark (mattypark/Motion-graphics-skill) - Skipped due to lack of open-source license."
+
+  - repo: VoltAgent/awesome-design-md
+    commit: "820d88478a2cb3c9902613b5e40798bf10243e8a"
+    license: MIT
+    status: active
+    extract:
+      - tokens
+      - rules
+    attribution: "VoltAgent (VoltAgent/awesome-design-md) - MIT. Curated brand DESIGN.md token specifications."
+
+  - repo: bergside/awesome-design-skills
+    commit: "5e173bb291a541fa904a43b2f5b3a31c59051877"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - tokens
+    attribution: "bergside (bergside/awesome-design-skills) - MIT. Aggregated design tokens and accessibility guidelines."
+
+  - repo: Z4YT0N/awwwards-skill
+    commit: "01f98d790d9774618a8b193798cb37885b542013"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - tokens
+    attribution: "Z4YT0N (Z4YT0N/awwwards-skill) - MIT. Fluid typography clamps, oklch color palettes, and SOTD standards."
+
+  - repo: Ga14ctic/awwwards-skill
+    commit: "36d2c4b009873f2a1b945d47012ca6e1a473ef25"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - code
+    attribution: "Ga14ctic (Ga14ctic/awwwards-skill) - MIT. Creative interaction choreography and high-fidelity transitions."
+
+  - repo: AThevon/genjutsu
+    commit: "904b7cb0a319ea81b0a701dfc1a938b8c5e933e4"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - code
+    attribution: "AThevon (AThevon/genjutsu) - MIT. Micro-interactions and fluid motion system architectures."
+
+  - repo: nateherkai/scroll-craft
+    commit: "6ab08b29df913c3bca782d09eb050fc33568ec91"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - code
+    attribution: "Nate Herk (nateherkai/scroll-craft) - MIT. Scroll-driven timeline grammars and dead-scroll verification."
+
+  - repo: superdesigndev/superdesign-skill
+    commit: "25b3cf17d23a4b08709a34bc3d49f6eb3c015b69"
+    license: MIT
+    status: active
+    extract:
+      - rules
+      - tokens
+    attribution: "superdesign (superdesigndev/superdesign-skill) - MIT. Multi-page layout hierarchy and production-ready tokens."
+

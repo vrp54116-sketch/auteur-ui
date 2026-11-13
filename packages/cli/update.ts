@@ -186,3 +186,4 @@ export function runUpdate(argv: string[] = []): void {
   console.log('\nAll assets and lockfiles synchronized.');
   console.log('======================================================\n');
 }
+

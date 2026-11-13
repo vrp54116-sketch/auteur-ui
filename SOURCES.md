@@ -77,3 +77,38 @@ No proprietary code or copyrighted web assets are bundled at runtime. Aesthetic 
 - **Cursor**: Rule specification (`.cursor/rules/<name>.mdc`) with YAML frontmatter schema (`description`, `globs`, `alwaysApply`).
 - **AGENTS.md**: Open cross-agent context instruction standard supported by Codex, Antigravity, and generic AI coding assistants with idempotent delimiter fences (`<!-- auteur-ui:start -->` ... `<!-- auteur-ui:end -->`).
 
+## Distilled Upstream Design Intelligence Skills (Phase 9 Pipeline)
+
+The following open-source design skills are distilled at build time in CI into deterministic executable rules (`rules.json`) and subjective guidance (`advisory.md`). Verified with permissive licenses (MIT / Apache-2.0).
+
+| Upstream Repository | Pinned Commit | License | Extracted Facets | Attribution |
+| :--- | :--- | :--- | :--- | :--- |
+| **[pbakaus/impeccable](https://github.com/pbakaus/impeccable)** | `9f32b6e` | Apache-2.0 | rules, tokens | Paul Bakaus (pbakaus/impeccable) - Apache-2.0. Anti-slop and visual system linter rules. |
+| **[nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** | `4b7a1e0` | MIT | rules, tokens | NextLevelBuilder (nextlevelbuilder/ui-ux-pro-max-skill) - MIT. Color systems, typography ramps, and chart patterns. |
+| **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** | `62e15bc` | MIT | rules, ideas | Leonxlnx (Leonxlnx/taste-skill) - MIT. Design taste direction, zero-radius authority, and layout hierarchy. |
+
+### Active Distilled Rule Attribution
+
+| Rule ID | Category | Weight | Source(s) | Imperative Statement |
+| :--- | :--- | :--- | :--- | :--- |
+| `color/avoid-pure-black` | COLOR | 3 | pbakaus/impeccable, nextlevelbuilder/ui-ux-pro-max-skill | Avoid pure #000000 background surfaces in dark mode; use warm dark neutrals instead. |
+| `a11y/focus-visible-required` | A11Y | 5 | pbakaus/impeccable | Never remove focus outlines without providing a high-contrast 2px focus-visible indicator. |
+| `a11y/tap-target-min-size` | A11Y | 5 | pbakaus/impeccable | Ensure interactive touch targets measure at least 44 by 44 pixels. |
+| `color/wcag-aa-contrast` | COLOR | 5 | nextlevelbuilder/ui-ux-pro-max-skill | Maintain at least 4.5 to 1 contrast ratio for normal text against background. |
+| `motion/honor-reduced-motion` | MOTION | 5 | Leonxlnx/taste-skill | Include prefers-reduced-motion media query zeroing transitions for users with vestibular sensitivity. |
+| `color/monochromatic-neutral-surfaces` | COLOR | 4 | Leonxlnx/taste-skill | Avoid vibrant multi-color gradients; use monochromatic ink surfaces with single subtle accent. |
+| `layout/asymmetric-hero-grid` | LAYOUT | 4 | Leonxlnx/taste-skill | Use asymmetric two-column layouts like 7fr to 5fr rather than centered heroes. |
+| `layout/no-centered-hero-3-cards` | LAYOUT | 4 | pbakaus/impeccable | Avoid centered heroes followed by exactly three identical width feature cards. |
+| `slop/inter-roboto-default` | SLOP | 4 | pbakaus/impeccable | Pair default sans-serif body fonts with a distinctive editorial serif or monospace display face. |
+| `slop/purple-blue-gradient` | SLOP | 4 | pbakaus/impeccable | Avoid purple-to-blue linear gradients on hero background surfaces. |
+| `space/base-grid-alignment` | SPACE | 4 | nextlevelbuilder/ui-ux-pro-max-skill | Align all margins, paddings, and gap distances to multiples of four pixels. |
+| `surface/zero-radius-authority` | SURFACE | 4 | Leonxlnx/taste-skill | Enforce strict zero pixel border-radius on buttons and cards for precise architectural authority. |
+| `type/body-line-height` | TYPE | 4 | Leonxlnx/taste-skill | Keep body paragraph line-height between 1.4 and 1.65 to ensure comfortable reading cadence. |
+| `type/max-reading-measure` | TYPE | 4 | Leonxlnx/taste-skill | Constrain text paragraph widths to a maximum of 65 characters to prevent eye fatigue. |
+| `type/modular-scale` | TYPE | 4 | nextlevelbuilder/ui-ux-pro-max-skill | Limit typography to at most seven distinct sizes on a 1.25 or 1.333 scale. |
+| `color/mesh-gradient-accents` | COLOR | 3 | nextlevelbuilder/ui-ux-pro-max-skill | Use multi-stop mesh gradients on hero cards to create high-energy modern visual atmosphere. |
+| `surface/no-diffuse-shadows` | SURFACE | 3 | pbakaus/impeccable | Replace diffuse box-shadows on all surfaces with crisp 1px borders or subtle contrast shifts. |
+| `surface/rounded-card-radius` | SURFACE | 3 | nextlevelbuilder/ui-ux-pro-max-skill | Apply 12px to 16px soft border-radius on all interactive cards. |
+| `type/heading-wrap-balance` | TYPE | 3 | pbakaus/impeccable | Apply text-wrap: balance to all headings to eliminate trailing orphan words. |
+| `type/tabular-numbers` | TYPE | 3 | nextlevelbuilder/ui-ux-pro-max-skill | Use font-variant-numeric: tabular-nums on all numerical data tables and metrics. |
+

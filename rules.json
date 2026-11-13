@@ -1,0 +1,243 @@
+[
+  {
+    "id": "color/avoid-pure-black",
+    "statement": "Avoid pure #000000 background surfaces in dark mode; use warm dark neutrals instead.",
+    "category": "COLOR",
+    "weight": 3,
+    "sources": [
+      "pbakaus/impeccable",
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 2,
+    "executable": true,
+    "score": 12
+  },
+  {
+    "id": "a11y/focus-visible-required",
+    "statement": "Never remove focus outlines without providing a high-contrast 2px focus-visible indicator.",
+    "category": "A11Y",
+    "weight": 5,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 10
+  },
+  {
+    "id": "a11y/tap-target-min-size",
+    "statement": "Ensure interactive touch targets measure at least 44 by 44 pixels.",
+    "category": "A11Y",
+    "weight": 5,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 10
+  },
+  {
+    "id": "color/wcag-aa-contrast",
+    "statement": "Maintain at least 4.5 to 1 contrast ratio for normal text against background.",
+    "category": "COLOR",
+    "weight": 5,
+    "sources": [
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 10
+  },
+  {
+    "id": "motion/honor-reduced-motion",
+    "statement": "Include prefers-reduced-motion media query zeroing transitions for users with vestibular sensitivity.",
+    "category": "MOTION",
+    "weight": 5,
+    "sources": [
+      "Leonxlnx/taste-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 10
+  },
+  {
+    "id": "color/monochromatic-neutral-surfaces",
+    "statement": "Avoid vibrant multi-color gradients; use monochromatic ink surfaces with single subtle accent.",
+    "category": "COLOR",
+    "weight": 4,
+    "sources": [
+      "Leonxlnx/taste-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "layout/asymmetric-hero-grid",
+    "statement": "Use asymmetric two-column layouts like 7fr to 5fr rather than centered heroes.",
+    "category": "LAYOUT",
+    "weight": 4,
+    "sources": [
+      "Leonxlnx/taste-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "layout/no-centered-hero-3-cards",
+    "statement": "Avoid centered heroes followed by exactly three identical width feature cards.",
+    "category": "LAYOUT",
+    "weight": 4,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "slop/inter-roboto-default",
+    "statement": "Pair default sans-serif body fonts with a distinctive editorial serif or monospace display face.",
+    "category": "SLOP",
+    "weight": 4,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "slop/purple-blue-gradient",
+    "statement": "Avoid purple-to-blue linear gradients on hero background surfaces.",
+    "category": "SLOP",
+    "weight": 4,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "space/base-grid-alignment",
+    "statement": "Align all margins, paddings, and gap distances to multiples of four pixels.",
+    "category": "SPACE",
+    "weight": 4,
+    "sources": [
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "surface/zero-radius-authority",
+    "statement": "Enforce strict zero pixel border-radius on buttons and cards for precise architectural authority.",
+    "category": "SURFACE",
+    "weight": 4,
+    "sources": [
+      "Leonxlnx/taste-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "type/body-line-height",
+    "statement": "Keep body paragraph line-height between 1.4 and 1.65 to ensure comfortable reading cadence.",
+    "category": "TYPE",
+    "weight": 4,
+    "sources": [
+      "Leonxlnx/taste-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "type/max-reading-measure",
+    "statement": "Constrain text paragraph widths to a maximum of 65 characters to prevent eye fatigue.",
+    "category": "TYPE",
+    "weight": 4,
+    "sources": [
+      "Leonxlnx/taste-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "type/modular-scale",
+    "statement": "Limit typography to at most seven distinct sizes on a 1.25 or 1.333 scale.",
+    "category": "TYPE",
+    "weight": 4,
+    "sources": [
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 8
+  },
+  {
+    "id": "color/mesh-gradient-accents",
+    "statement": "Use multi-stop mesh gradients on hero cards to create high-energy modern visual atmosphere.",
+    "category": "COLOR",
+    "weight": 3,
+    "sources": [
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 6
+  },
+  {
+    "id": "surface/no-diffuse-shadows",
+    "statement": "Replace diffuse box-shadows on all surfaces with crisp 1px borders or subtle contrast shifts.",
+    "category": "SURFACE",
+    "weight": 3,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 6
+  },
+  {
+    "id": "surface/rounded-card-radius",
+    "statement": "Apply 12px to 16px soft border-radius on all interactive cards.",
+    "category": "SURFACE",
+    "weight": 3,
+    "sources": [
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 6
+  },
+  {
+    "id": "type/heading-wrap-balance",
+    "statement": "Apply text-wrap: balance to all headings to eliminate trailing orphan words.",
+    "category": "TYPE",
+    "weight": 3,
+    "sources": [
+      "pbakaus/impeccable"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 6
+  },
+  {
+    "id": "type/tabular-numbers",
+    "statement": "Use font-variant-numeric: tabular-nums on all numerical data tables and metrics.",
+    "category": "TYPE",
+    "weight": 3,
+    "sources": [
+      "nextlevelbuilder/ui-ux-pro-max-skill"
+    ],
+    "source_count": 1,
+    "executable": true,
+    "score": 6
+  }
+]

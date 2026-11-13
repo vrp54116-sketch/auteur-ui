@@ -1,0 +1,70 @@
+name: Upstream Taste Distillation
+
+on:
+  schedule:
+    # Run weekly on Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    inputs:
+      first_n_sources:
+        description: 'Number of sources to distill (leave empty for all active sources)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  distill:
+    name: Run Distillation & Detect Conflicts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Distillation Pipeline
+        run: |
+          if [ -n "${{ github.event.inputs.first_n_sources }}" ]; then
+            node pipeline/merge.mjs --first "${{ github.event.inputs.first_n_sources }}"
+          else
+            node pipeline/merge.mjs
+          fi
+
+      - name: Run Pipeline Invariant Tests
+        run: npx vitest run tests/pipeline.spec.ts
+
+      - name: Create Pull Request with Distilled Changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: ci/upstream-distill
+          commit-message: "chore(distill): update distilled rules, conflicts, and attributions"
+          title: "chore(distill): weekly upstream design intelligence sync"
+          body: |
+            ## Automated Weekly Distillation Sync
+            
+            This pull request contains the latest distilled design intelligence rules extracted from verified upstream repositories.
+            
+            ### Artifacts Updated:
+            - `rules.json`: Executable rules ranked and capped at <= 40 rules.
+            - `advisory.md`: Curated subjective taste principles (budget <= 200 tokens).
+            - `pipeline/CONFLICTS.md`: Contradictory design philosophies detected across sources.
+            - `SOURCES.md`: Full attribution and license ledger.
+            
+            > [!IMPORTANT]
+            > **DO NOT AUTO-MERGE.**
+            > Human taste review is required. Inspect `pipeline/CONFLICTS.md` for any unresolved taste divergences and resolve them in `pipeline/resolutions.yml` prior to landing.
+          labels: |
+            distillation
+            taste-conflicts
+            automated-pr
+          delete-branch: true
+
