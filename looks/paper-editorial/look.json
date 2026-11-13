@@ -1,0 +1,62 @@
+{
+  "id": "paper-editorial",
+  "name": "Paper Editorial",
+  "description": "Tactile warm cream aesthetic with high-contrast serif, generous book-spread whitespace, and gentle fades.",
+  "type": {
+    "display": "Cormorant Garamond",
+    "text": "EB Garamond",
+    "mono": "Space Mono",
+    "scale": 1.25,
+    "opticalSizing": true
+  },
+  "palette": {
+    "id": "paper-cream",
+    "mode": "light",
+    "tokens": {
+      "bg": "oklch(0.96 0.015 85)",
+      "surface": "oklch(0.98 0.01 85)",
+      "border": "oklch(0.85 0.02 85)",
+      "fg": "oklch(0.18 0.02 50)",
+      "fgMuted": "oklch(0.45 0.025 50)",
+      "accent": "oklch(0.48 0.12 35)"
+    }
+  },
+  "space": {
+    "base": 8,
+    "rhythm": "spacious"
+  },
+  "radius": {
+    "strategy": "soft",
+    "values": {
+      "none": "0px",
+      "sm": "3px",
+      "md": "6px",
+      "lg": "12px",
+      "full": "9999px"
+    }
+  },
+  "motion": {
+    "personality": "editorial",
+    "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "dur": [250, 500, 1000],
+    "stagger": 60
+  },
+  "sound": {
+    "kit": "paper-turn",
+    "events": ["page-turn", "bookmark"],
+    "volume": 0.1,
+    "enabled": false
+  },
+  "layout": {
+    "grid": "book-spread",
+    "asymmetry": 0.4
+  },
+  "forbid": [
+    "harsh-pure-white (#ffffff-background)",
+    "loud-neon-colors",
+    "rapid-jittery-motion",
+    "heavy-black-borders",
+    "sans-serif-body"
+  ],
+  "version": "0.1.0"
+}

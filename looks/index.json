@@ -1,0 +1,32 @@
+[
+  {
+    "id": "nocturne-editorial",
+    "description": "Warm dark aesthetic with classical serif typography, print rhythm, and restrained motion.",
+    "tags": ["dark", "serif", "editorial", "restrained", "warm"],
+    "bestFor": "Long-form journalism, literary magazines, essays, deep-dive research"
+  },
+  {
+    "id": "swiss-utility",
+    "description": "High-density functionalist design with neutral grotesk, sharp 0px corners, and rigorous grid discipline.",
+    "tags": ["light", "grotesk", "sharp", "dense", "minimal", "swiss"],
+    "bestFor": "Technical documentation, dev tools, reference tables, data density"
+  },
+  {
+    "id": "kinetic-pop",
+    "description": "High-chroma playful UI with oversized geometric display type, spring physics, and bold borders.",
+    "tags": ["light", "playful", "high-chroma", "spring", "pop", "bold"],
+    "bestFor": "Consumer apps, viral launches, creative portfolios, youth products"
+  },
+  {
+    "id": "terminal-luxe",
+    "description": "Developer-centric monospace interface with CRT-inspired palette, phosphor accents, and character-cell grid.",
+    "tags": ["dark", "mono", "terminal", "technical", "phosphor"],
+    "bestFor": "Code editors, CLI wrappers, telemetry monitors, security dashboards"
+  },
+  {
+    "id": "paper-editorial",
+    "description": "Tactile warm cream aesthetic with high-contrast serif, generous book-spread whitespace, and gentle fades.",
+    "tags": ["light", "cream", "serif", "spacious", "tactile", "print"],
+    "bestFor": "Curated catalogs, art monographs, personal blogs, slow-reading apps"
+  }
+]

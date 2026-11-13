@@ -1,0 +1,62 @@
+{
+  "id": "kinetic-pop",
+  "name": "Kinetic Pop",
+  "description": "High-chroma playful UI with oversized geometric display type, spring physics, and bold borders.",
+  "type": {
+    "display": "Syne",
+    "text": "Plus Jakarta Sans",
+    "mono": "Space Mono",
+    "scale": 1.414,
+    "opticalSizing": false
+  },
+  "palette": {
+    "id": "kinetic-electric",
+    "mode": "light",
+    "tokens": {
+      "bg": "oklch(0.97 0.015 285)",
+      "surface": "oklch(1.0 0 0)",
+      "border": "oklch(0.15 0.02 285)",
+      "fg": "oklch(0.12 0.02 285)",
+      "fgMuted": "oklch(0.40 0.03 285)",
+      "accent": "oklch(0.68 0.26 350)"
+    }
+  },
+  "space": {
+    "base": 8,
+    "rhythm": "bouncy"
+  },
+  "radius": {
+    "strategy": "soft",
+    "values": {
+      "none": "0px",
+      "sm": "8px",
+      "md": "16px",
+      "lg": "24px",
+      "full": "9999px"
+    }
+  },
+  "motion": {
+    "personality": "playful",
+    "ease": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+    "dur": [200, 400, 600],
+    "stagger": 50
+  },
+  "sound": {
+    "kit": "bubble-pop",
+    "events": ["pop", "swoosh", "tap"],
+    "volume": 0.35,
+    "enabled": true
+  },
+  "layout": {
+    "grid": "overlap-asymmetric",
+    "asymmetry": 0.65
+  },
+  "forbid": [
+    "monochrome-palettes",
+    "linear-easing",
+    "subtle-low-contrast-text",
+    "sharp-0px-radius",
+    "whispering-headers"
+  ],
+  "version": "0.1.0"
+}
