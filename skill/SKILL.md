@@ -11,10 +11,11 @@ description: Designs and redesigns any app, dashboard, landing page, or UI to ma
 4. Emit `.auteur-ui/directions.json` (<=400 tokens, 3-5 directions, use `looks/index.json` ids). Then run `npx auteur-ui preview --open`.
 5. STOP. Ask the human to reply with a number. Do not build yet.
 6. On reply: `npx auteur-ui lock <id>` writes `.auteur-ui/contract.json`.
-7. Load ONLY the modules named by the contract. Never load all.
-8. BUILD from contract + `code/` assets. Copy assets, do not reinvent.
-9. GATE: `npx auteur-ui lint --json`. Fix violations. Max 2 iterations. Only then one cropped screenshot if a visual issue remains.
-10. Report score + tokens. Refuse to declare done below 80.
+7. Load ONLY modules named by contract. If reading > 3 module files, MUST run `npx auteur-ui ask` with `--scope modules`.
+8. Enforce budget: run `npx auteur-ui budget`. If STOP directive triggered, halt.
+9. BUILD from contract + `code/` assets. Copy assets, do not reinvent.
+10. GATE: `npx auteur-ui lint --json`. Fix violations. Max 2 iterations. Only then one cropped screenshot if a visual issue remains.
+11. Run `npx auteur-ui report`. Refuse to declare done below 80.
 
 ### MODULES
 
@@ -26,4 +27,3 @@ description: Designs and redesigns any app, dashboard, landing page, or UI to ma
 | `modules/motion.md` | Easing curves, duration triplets, stagger physics | 250 |
 | `modules/sound.md` | Audio cues, synthesizer blips, volume levels | 200 |
 | `modules/components.md` | Buttons, cards, surfaces, inputs, status tags | 300 |
-

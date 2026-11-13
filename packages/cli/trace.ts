@@ -15,11 +15,21 @@ export const REQUIRED_PHASES = [
 
 export const DEFAULT_TRACE_PATH = '.auteur-ui/trace.jsonl';
 
+/**
+ * Estimate token count using the documented heuristic (chars / 4).
+ * Always labeled as an estimate; never claimed as exact.
+ */
+export function estimateTokens(text: string): number {
+  if (!text) return 0;
+  return Math.ceil(text.length / 4);
+}
+
 export function appendTrace(
   record: {
     phase: string;
     args?: string[];
     tokens_estimate?: number;
+    child_tokens_estimate?: number;
     result?: string;
     ts?: string;
   },
@@ -37,6 +47,9 @@ export function appendTrace(
       phase: record.phase,
       args: record.args || [],
       tokens_estimate: record.tokens_estimate ?? 0,
+      ...(typeof record.child_tokens_estimate === 'number'
+        ? { child_tokens_estimate: record.child_tokens_estimate }
+        : {}),
       result: record.result || 'ok',
     };
 

@@ -1,0 +1,15 @@
+{
+  "preset": "standard",
+  "total": 20000,
+  "warning_threshold": 0.8,
+  "phases": {
+    "brief": 1000,
+    "directions": 1500,
+    "preview": 500,
+    "human_pick": 200,
+    "lock": 800,
+    "build": 12000,
+    "lint": 3000,
+    "pass": 1000
+  }
+}

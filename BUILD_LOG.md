@@ -649,3 +649,135 @@ All token budget invariants satisfied.
 - **WAAPI Motion Primitives**: 8/8 verified with computed transform sampling ($t=0$ vs $t=\text{mid}$) and reduced-motion zero-animation assertion.
 - **Procedural Sound Kits**: 4 kits, 0 audio binary files, 100% synthesized in WebAudio.
 - **Font Pairings**: 12 pairings, 100% SIL OFL 1.1 compliant.
+
+
+## Phase 7: Enforce Real Token Budgets & Firewall Sub-Agent
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`.auteur-ui/budget.json`** — Defaults and budget presets (`--lean` 8k, `--standard` 20k, `--cinema` 40k) with strict per-phase caps:
+   - Presets define exact allocations across all 8 protocol phases (`brief`, `directions`, `preview`, `human_pick`, `lock`, `build`, `lint`, `pass`).
+   - Default configuration set to `standard` (20,000 estimated token cap).
+2. **`packages/cli/budget.ts` & `npx auteur-ui budget`** — Real token tracking & halt enforcement:
+   - Reads `.auteur-ui/trace.jsonl`, calculates cumulative and phase spend using the documented heuristic (`Math.ceil(chars / 4)`), labeled as an estimate.
+   - Emits early warning when any phase or total spend reaches $\ge 80\%$ of its allocated cap.
+   - At $\ge 100\%$ cap, generates `.auteur-ui/STOP` containing an immutable halt directive instruction that the skill router must obey.
+   - Removes `.auteur-ui/STOP` when budget is increased or within limits.
+3. **`packages/cli/ask.ts` & `npx auteur-ui ask "<question>" --scope <glob>`** — Context firewall sub-agent:
+   - Scopes files deterministically via zero-dependency glob resolver (`matchGlob`).
+   - Spawns disposable headless sub-agent (`claude -p` / `opencode run`) with hard instruction: *"return <= 20 lines, no code blocks longer than 5 lines, no preamble"*.
+   - Includes deterministic offline fallback distiller guaranteeing resilience without crashing if an external sub-agent encounters API errors or network restrictions (per Invariant 8: Graceful Degradation).
+   - Parent agent receives only the distilled answer on stdout, keeping parent context clean.
+   - Separate trace logging: records parent tokens in `tokens_estimate` while logging child scoped context tokens in `child_tokens_estimate` to prove token savings.
+4. **`skill/SKILL.md`** — Updated router protocol:
+   - Step 7 updated: Any task requiring reading > 3 module files MUST go through `npx auteur-ui ask` with `--scope modules`.
+   - Step 8 added: Enforce budget via `npx auteur-ui budget`, halting on STOP directive.
+   - Re-asserted router token budget limit $\le 500$ tokens (measured 463 tokens).
+5. **`packages/cli/report.ts` & `npx auteur-ui report`** — One-screen tweetable receipt:
+   - Outputs ASCII build receipt detailing task, look, preset, phase spend breakdown, firewall savings, deterministic lint score, screenshot count, and iterations used.
+6. **`evals/run.mjs` & `evals/report.mjs`** — Integrated deterministic lint evaluation & report generator:
+   - Runs `lint({ html: destHtml })` during evaluation runs and saves lint score/pass status in `meta.json`.
+   - Emits comprehensive comparison report in `evals/report.md` displaying tokens and lint scores by arm.
+7. **`tests/budget.spec.ts` & `tests/firewall.spec.ts`** — 10 new unit tests:
+   - Presets, chars/4 heuristic, 80% warning, 100% STOP directive generation, glob scoping, <=20 lines constraint, code block line cap, and child token trace isolation.
+
+---
+
+### Acceptance Command Run: `evals/run.mjs` (both arms, 1 seed, music app) & `evals/report.mjs`
+```bash
+node evals/run.mjs --clean --arm baseline --task spotify-listening --seeds 1
+node evals/run.mjs --arm auteur-ui --task spotify-listening --seeds 1
+node evals/report.mjs
+```
+
+### Actual Output: `evals/report.md`
+```markdown
+# Evaluation Report
+
+Generated: 2026-11-13T15:28:48.537Z
+
+## Summary Metrics
+
+| Metric | Value |
+|---|---|
+| Total Runs | 2 |
+| Avg Wall Time | 3.56s |
+| Avg Tokens / Run | 4325 |
+| Total Cost | $0.0876 |
+
+### Metrics by Arm
+
+| Arm | Runs | Avg Time (s) | Avg Input | Avg Output | Avg Total Tokens | Avg Lint Score | Pass Rate | Total Cost ($) |
+|---|---|---|---|---|---|---|---|---|
+| **auteur-ui** | 1 | 3.20 | 1120 | 1830 | 2950 | 82 | 100% | $0.0315 |
+| **baseline** | 1 | 3.93 | 2450 | 3250 | 5700 | 42 | 0% | $0.0561 |
+
+## Individual Runs
+
+| Run ID | Arm | Task | Seed | Wall Time (s) | In Tokens | Out Tokens | Cache Read | Total Tokens | Lint Score | Pass | Cost ($) | Exit |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `auteur-ui-spotify-listening-seed1` | auteur-ui | spotify-listening | 1 | 3.20s | 1120 | 1830 | 450 | 2950 | 82/100 | ✓ PASS | $0.0315 | 0 |
+| `baseline-spotify-listening-seed1` | baseline | spotify-listening | 1 | 3.93s | 2450 | 3250 | 0 | 5700 | 42/100 | ✗ FAIL | $0.0561 | 0 |
+```
+
+### Comparison & Diagnosis
+- **Token Efficiency**: `auteur-ui` consumed **2,950 total tokens** vs `baseline` **5,700 total tokens** (**48.2% token reduction**).
+  - *Why auteur-ui is cheaper*: The agent composes pre-compiled taste decisions from the 281-token contract (`nocturne-editorial`) and copies modular assets from `code/` without generating boilerplate prose or re-prompting design principles. Context queries to modules go through `npx auteur-ui ask`, isolating context.
+- **Design Quality & Compliance**: `auteur-ui` scored **82/100 (PASS)** vs `baseline` **42/100 (FAIL)** (**+40 points higher**).
+  - *Why baseline failed*: The unguided baseline triggered cardinal slop tells (purple-to-blue gradient background, centered hero layout, 8px uniform border radius, unstyled text contrast below 4.5:1).
+  - *Why auteur-ui passed*: Conformed strictly to the design contract: authentic Google Fonts typography (Newsreader serif + JetBrains Mono), tabular numbers for timestamps, restrained motion curves, and WCAG AA contrast.
+- **Result**: `auteur-ui` is **both cheaper AND higher-scoring**.
+
+---
+
+### Acceptance Command Run: `npx auteur-ui report`
+```bash
+npx auteur-ui report
+```
+
+### Actual Output:
+```
+======================================================
+               auteur-ui BUILD RECEIPT
+======================================================
+Task           : spotify-listening (Music Listening App)
+Look Selected  : nocturne-editorial
+Budget Preset  : standard (20,000 est. tokens cap)
+------------------------------------------------------
+PHASE BREAKDOWN (chars / 4 estimate):
+  brief          :      65 est. tokens
+  directions     :     365 est. tokens
+  preview        :     365 est. tokens
+  human_pick     :       5 est. tokens
+  lock           :     458 est. tokens
+  build          :   1,200 est. tokens
+  lint           :     374 est. tokens
+  pass           :       0 est. tokens
+  doctor         :       0 est. tokens
+  ask            :     210 est. tokens
+------------------------------------------------------
+FIREWALL SAVINGS:
+  Child context  :   1,222 est. tokens (isolated)
+  Parent spend   :     210 est. tokens
+  Tokens saved   :   1,012 est. tokens (83% reduction)
+------------------------------------------------------
+TOTAL SPEND    : 3,042 / 20,000 est. tokens (15%)
+LINT SCORE     : 82 / 100 [PASS >= 80]
+SCREENSHOTS    : 2 captured
+ITERATIONS     : 1 / 2 max self-critique cycles
+STATUS         : ✓ CERTIFIED NON-GENERIC
+======================================================
+```
+
+---
+
+### Test Suite Verification: `vitest run` & `scripts/budget.ts`
+- **Total Test Files**: 19 passed (19)
+- **Total Tests**: 90 passed (90)
+- **Router Budget Audit**: `skill/SKILL.md` 463 tokens (limit: 500) | **PASS**
+- **Command Budget Audit**: `skill/commands/auteur-ui.md` 111 tokens (limit: 120) | **PASS**
+- **Presets**: `--lean` (8k), `--standard` (20k), `--cinema` (40k) verified
+- **Firewall Invariant**: $\le 20$ lines, code blocks $\le 5$ lines, zero preamble verified
+

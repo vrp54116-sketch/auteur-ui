@@ -12,3 +12,4 @@
 {"ts":"2026-11-13T13:46:36.884Z","phase":"lint","args":["--json","--html","evals/fixtures/slop-1.html"],"tokens_estimate":220,"result":"fail"}
 {"ts":"2026-11-13T13:46:48.139Z","phase":"lint","args":["--json","--html","evals/fixtures/good-1.html"],"tokens_estimate":154,"result":"pass"}
 {"ts":"2026-11-13T13:47:03.829Z","phase":"doctor","args":[],"tokens_estimate":0,"result":"pass"}
+{"ts":"2026-11-13T15:25:03.087Z","phase":"ask","args":["What are the rules for motion duration triplets and easing curves?","--scope","modules/*.md"],"tokens_estimate":210,"child_tokens_estimate":1222,"result":"distilled via deterministic-distiller"}

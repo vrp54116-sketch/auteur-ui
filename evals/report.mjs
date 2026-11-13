@@ -75,8 +75,8 @@ export function generateMarkdownReport(runs) {
   const arms = [...new Set(runs.map((r) => r.arm))];
   if (arms.length > 1) {
     md += '### Metrics by Arm\n\n';
-    md += '| Arm | Runs | Avg Time (s) | Avg Input | Avg Output | Avg Total Tokens | Total Cost ($) |\n';
-    md += '|---|---|---|---|---|---|---|\n';
+    md += '| Arm | Runs | Avg Time (s) | Avg Input | Avg Output | Avg Total Tokens | Avg Lint Score | Pass Rate | Total Cost ($) |\n';
+    md += '|---|---|---|---|---|---|---|---|---|\n';
 
     for (const arm of arms) {
       const armRuns = runs.filter((r) => r.arm === arm);
@@ -94,19 +94,27 @@ export function generateMarkdownReport(runs) {
       const armAvgTot = Math.round(
         armRuns.reduce((acc, r) => acc + (r.tokens?.total || 0), 0) / armRuns.length
       );
+      const armRunsWithLint = armRuns.filter((r) => r.lint?.score !== undefined);
+      const avgLint = armRunsWithLint.length > 0
+        ? Math.round(armRunsWithLint.reduce((acc, r) => acc + r.lint.score, 0) / armRunsWithLint.length)
+        : '-';
+      const passCount = armRunsWithLint.filter((r) => r.lint?.pass === true).length;
+      const passRate = armRunsWithLint.length > 0
+        ? `${Math.round((passCount / armRunsWithLint.length) * 100)}%`
+        : '-';
       const armCost = armRuns
         .reduce((acc, r) => acc + (r.costUsd || 0), 0)
         .toFixed(4);
 
-      md += `| **${arm}** | ${armRuns.length} | ${armAvgTime} | ${armAvgIn} | ${armAvgOut} | ${armAvgTot} | $${armCost} |\n`;
+      md += `| **${arm}** | ${armRuns.length} | ${armAvgTime} | ${armAvgIn} | ${armAvgOut} | ${armAvgTot} | ${avgLint} | ${passRate} | $${armCost} |\n`;
     }
     md += '\n';
   }
 
   // Detailed Table
   md += '## Individual Runs\n\n';
-  md += '| Run ID | Arm | Task | Seed | Wall Time (s) | In Tokens | Out Tokens | Cache Read | Total Tokens | Cost ($) | Exit |\n';
-  md += '|---|---|---|---|---|---|---|---|---|---|---|\n';
+  md += '| Run ID | Arm | Task | Seed | Wall Time (s) | In Tokens | Out Tokens | Cache Read | Total Tokens | Lint Score | Pass | Cost ($) | Exit |\n';
+  md += '|---|---|---|---|---|---|---|---|---|---|---|---|---|\n';
 
   for (const r of runs) {
     const timeSec = ((r.wallTimeMs || 0) / 1000).toFixed(2);
@@ -114,10 +122,12 @@ export function generateMarkdownReport(runs) {
     const outTokens = r.tokens?.output || 0;
     const cacheRead = r.tokens?.cacheRead || 0;
     const totTokens = r.tokens?.total || 0;
+    const lintScore = r.lint?.score !== undefined ? `${r.lint.score}/100` : '-';
+    const lintPass = r.lint?.pass !== undefined ? (r.lint.pass ? '✓ PASS' : '✗ FAIL') : '-';
     const cost = (r.costUsd || 0).toFixed(4);
     const exit = r.exitCode ?? 0;
 
-    md += `| \`${r.id}\` | ${r.arm} | ${r.taskId} | ${r.seed} | ${timeSec}s | ${inTokens} | ${outTokens} | ${cacheRead} | ${totTokens} | $${cost} | ${exit} |\n`;
+    md += `| \`${r.id}\` | ${r.arm} | ${r.taskId} | ${r.seed} | ${timeSec}s | ${inTokens} | ${outTokens} | ${cacheRead} | ${totTokens} | ${lintScore} | ${lintPass} | $${cost} | ${exit} |\n`;
   }
 
   md += '\n---\n*Human Grading Gallery generated at [gallery.html](gallery.html) with blind randomized pairs.*\n';
