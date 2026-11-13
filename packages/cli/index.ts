@@ -59,7 +59,7 @@ export async function runCli(argv: string[] = process.argv.slice(2)): Promise<vo
       break;
 
     case 'lint':
-      runLint(subArgs);
+      await runLint(subArgs);
       break;
 
     case 'score':

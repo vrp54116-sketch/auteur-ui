@@ -431,3 +431,108 @@ Required sequence: brief -> directions -> preview -> human_pick -> lock -> build
 - **Direction Output Budget**: Limit 400 tokens | Measured: 365 tokens | PASS
 - **Trace Verification Order**: Exits 0 on valid 8-phase sequence, exits 1 on missing/truncated phase naming the missing phase | PASS
 - **Zero Runtime Network**: Zero network dependencies during CLI or skill execution.
+
+
+## Phase 5: Deterministic Taste & Anti-Pattern Linter
+
+### Date
+2026-11-13
+
+### What shipped
+1. **`packages/lint/`** — Core deterministic taste and anti-pattern linter engine:
+   - `extract.ts`: Headless Playwright DOM geometry, computed styles, text node extraction, viewport scroll dimensions, and responsive mobile (390px) evaluation. Zero runtime network.
+   - `types.ts`: Comprehensive TypeScript contracts for extracted page data, DOM nodes, rule definitions, violations, and compact lint results.
+   - `score.ts`: Weighted scoring calculation ($100 - \sum \text{deductions}$), hard-fail enforcement, and token-bounded JSON output formatter strictly capping serialization to $\le 250$ tokens.
+   - `index.ts`: Programmatic entry point `lint(options)` integrating with `.auteur-ui/contract.json`.
+2. **`packages/lint/rules/`** — 9 modular deterministic rule categories (each isolated and unit-tested):
+   - `type.ts`: Distinct font-size count vs. scale, off-scale sizes, line-height 1.2–1.7, measure $\le 75\text{ch}$, heading `text-wrap: balance`.
+   - `color.ts`: WCAG AA contrast ratio per text node (4.5:1 / 3:1), color entropy, pure `#000000` on large surfaces, saturation variance.
+   - `space.ts`: 4px/8px base spatial grid alignment, consistent sibling gap variance.
+   - `rhythm.ts`: Vertical rhythm variance, uniform section padding slop tell.
+   - `hierarchy.ts`: Mandatory dominant `h1`, heading level ordering, above-the-fold focal prominence.
+   - `motion.ts`: Interactive state transitions, duration constraints, layout-shifting property guards (`transform`/`opacity` only), `@media (prefers-reduced-motion)`.
+   - `a11y.ts`: Accessibility hard fails — focus indicators (`outline: none` without `:focus-visible`), tap targets $\ge 44\text{px}$ (minimum $24\times 24\text{px}$), `alt` text on images, accessible `aria` on icon buttons.
+   - `responsive.ts`: Horizontal scroll overflow at 390px, CLS image proxies, text clipping under `overflow: hidden`.
+   - `slop.ts`: 10 weighted cardinal slop tells (-8 pts each) — Inter/Roboto default without display face, purple-to-blue gradient hero, centered hero + 3 equal cards, emoji icons, uniform border-radius, diffuse drop shadows everywhere, generic "Get Started"/"Learn More" CTAs, 3-column pricing highlight, washed out slate gray-on-gray text, stock avatar circles.
+   - `index.ts`: Registry aggregation and `--explain <rule>` dictionary.
+3. **`lint/SCORING.md` & `packages/lint/SCORING.md`** — Comprehensive scoring rubric documenting deductions, weights, pass thresholds, and hard fails.
+4. **`packages/cli/lint.ts` & `bin/auteur-ui.mjs`** — Updated CLI supporting:
+   - `npx auteur-ui lint --json`
+   - `npx auteur-ui lint --url <url>`
+   - `npx auteur-ui lint --html <file>`
+   - `npx auteur-ui lint --explain <rule>`
+5. **`tests/lint/`** — Complete test coverage:
+   - 9 unit test suites (`type.spec.ts`, `color.spec.ts`, `space.spec.ts`, `rhythm.spec.ts`, `hierarchy.spec.ts`, `motion.spec.ts`, `a11y.spec.ts`, `responsive.spec.ts`, `slop.spec.ts`).
+   - Acceptance integration suite (`fixtures.spec.ts`) asserting exact scores on all 6 Phase 1 fixtures.
+
+---
+
+### Acceptance Command Run: `vitest run tests/lint/fixtures.spec.ts`
+```bash
+vitest run tests/lint/fixtures.spec.ts
+```
+
+### Actual Output: 6 Fixture Scores & Token Measurements
+```
+======================================================
+ Fixture Acceptance Verification (Phase 5)
+======================================================
+Bad Fixtures (Required: Score < 50, Pass: false):
+  - slop-1.html : Score 31 / 100 | Pass: false | JSON Tokens: 220 / 250 [PASS]
+  - slop-2.html : Score 42 / 100 | Pass: false | JSON Tokens: 229 / 250 [PASS]
+  - slop-3.html : Score 29 / 100 | Pass: false | JSON Tokens: 216 / 250 [PASS]
+
+Good Fixtures (Required: Score > 80, Pass: true):
+  - good-1.html : Score 85 / 100 | Pass: true  | JSON Tokens: 154 / 250 [PASS]
+  - good-2.html : Score 82 / 100 | Pass: true  | JSON Tokens: 150 / 250 [PASS]
+  - good-3.html : Score 82 / 100 | Pass: true  | JSON Tokens: 156 / 250 [PASS]
+======================================================
+```
+
+---
+
+### Acceptance Command Run: `npx auteur-ui lint --explain slop/purple-blue-gradient`
+```bash
+npx auteur-ui lint --explain slop/purple-blue-gradient
+```
+
+### Actual Output:
+```
+================================================================================
+ auteur-ui Lint Rule: slop/purple-blue-gradient [SLOP]
+================================================================================
+Title      : Purple-to-Blue Gradient Hero
+Deduction  : -8 pts
+
+Why It Matters:
+  The generic purple/indigo/pink gradient hero is an overused cliché from 2021 SaaS mockups.
+
+Bad Example:
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+
+Recommended Fix:
+  Use deep warm neutrals, photographic plates, or monochromatic editorial surfaces.
+================================================================================
+```
+
+---
+
+### Acceptance Command Run: `npx auteur-ui lint --json --html evals/fixtures/slop-1.html`
+```bash
+npx auteur-ui lint --json --html evals/fixtures/slop-1.html
+```
+
+### Actual Output & Token Count (Limit <= 250):
+```json
+{"score":31,"pass":false,"fail":[{"r":"color/contrast-ratio","sel":".hero","val":"1.05:1 (fg: rgb(255, 255, 255), bg: rgb(248, 250, 252))","want":">= 4.5:1 (WCAG AA)","fix":"Increase contrast between text color and background"},{"r":"slop/purple-blue-gradient","sel":".hero","val":"Purple/violet/indigo gradient hero background","want":"Solid neutral surface, photographic plate, or intentional brand palette token","fix":"Replace AI-cliché purple gradient with high-contrast neutral or authentic palette tone"},{"r":"slop/centered-hero-3-cards","sel":".cards-grid, .grid-3","val":"Centered hero followed by exactly 3 equal-width feature cards","want":"Asymmetric layout, varying grid weights, or editorial hierarchy","fix":"Break grid symmetry: use 7fr/5fr split or hierarchical focal spans"}],"warnings":[]}
+```
+- **Measured JSON Tokens (`gpt-tokenizer`)**: 220 tokens (Limit: 250 tokens) | **PASS**
+
+---
+
+### Total Test Suite Verification: `vitest run`
+```
+ Test Files  14 passed (14)
+      Tests  69 passed (69)
+   Duration  2.47s
+```

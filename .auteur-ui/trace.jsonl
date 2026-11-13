@@ -7,3 +7,8 @@
 {"ts":"2026-11-13T10:01:15.000Z","phase":"lint","args":["--json"],"tokens_estimate":0,"result":"pass"}
 {"ts":"2026-11-13T10:01:20.000Z","phase":"pass","args":[],"tokens_estimate":0,"result":"score: 100"}
 {"ts":"2026-11-13T13:21:22.233Z","phase":"doctor","args":[],"tokens_estimate":0,"result":"pass"}
+{"ts":"2026-11-13T13:29:18.773Z","phase":"doctor","args":[],"tokens_estimate":0,"result":"pass"}
+{"ts":"2026-11-13T13:46:31.840Z","phase":"lint","args":["--html","evals/fixtures/slop-1.html"],"tokens_estimate":0,"result":"fail"}
+{"ts":"2026-11-13T13:46:36.884Z","phase":"lint","args":["--json","--html","evals/fixtures/slop-1.html"],"tokens_estimate":220,"result":"fail"}
+{"ts":"2026-11-13T13:46:48.139Z","phase":"lint","args":["--json","--html","evals/fixtures/good-1.html"],"tokens_estimate":154,"result":"pass"}
+{"ts":"2026-11-13T13:47:03.829Z","phase":"doctor","args":[],"tokens_estimate":0,"result":"pass"}

@@ -14,9 +14,4 @@ export interface BriefData {
   createdAt: string;
 }
 
-export interface LintResult {
-  score: number;
-  pass: boolean;
-  violations: Array<{ rule: string; message: string }>;
-}
-
+export type { LintResult, LintFailure, LintWarning } from '../lint/index.js';
