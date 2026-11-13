@@ -67,6 +67,34 @@ function runBudget(): void {
     });
   }
 
+  // 4. Audit skill/SKILL.md router budget (limit 500)
+  const routerPath = join(root, 'skill', 'SKILL.md');
+  if (existsSync(routerPath)) {
+    const routerRaw = readFileSync(routerPath, 'utf-8');
+    const routerTokens = encode(routerRaw).length;
+
+    results.push({
+      target: 'skill/SKILL.md router',
+      tokens: routerTokens,
+      limit: 500,
+      passed: routerTokens <= 500,
+    });
+  }
+
+  // 5. Audit skill/commands/auteur-ui.md (limit 120)
+  const commandPath = join(root, 'skill', 'commands', 'auteur-ui.md');
+  if (existsSync(commandPath)) {
+    const cmdRaw = readFileSync(commandPath, 'utf-8');
+    const cmdTokens = encode(cmdRaw).length;
+
+    results.push({
+      target: 'skill/commands/auteur-ui.md',
+      tokens: cmdTokens,
+      limit: 120,
+      passed: cmdTokens <= 120,
+    });
+  }
+
   // Print results table
   console.log(
     'Target'.padEnd(36) +

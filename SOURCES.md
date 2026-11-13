@@ -44,3 +44,14 @@ No proprietary code or copyrighted web assets are bundled at runtime. Aesthetic 
    - Lineage: Book spread composition, unbleached cotton paper stock, generous editorial margins, terracotta wax seal accents.
    - Reference anchors: *The New Yorker*, *Kinfolk*, *Cereal Magazine*.
 
+---
+
+## Modular Design Upstream Lineages (`modules/*.md`)
+
+- **`typography.md`**: Typographic modular scale derived from Robert Bringhurst's *The Elements of Typographic Style* (1992) and variable font optical sizing specifications.
+- **`color.md`**: Perceptually uniform lightness and chroma rules derived from Björn Ottosson's OKLCH color model (2020) and W3C WCAG 2.1 relative luminance standards.
+- **`layout.md`**: Spatial grid systems based on Josef Müller-Brockmann's *Grid Systems in Graphic Design* (1961) and modern CSS subgrid specifications.
+- **`motion.md`**: Natural easing transitions derived from Disney's 12 basic principles of animation and Robert Penner's easing equations.
+- **`sound.md`**: Synthesized audio blips compiled with WebAudio oscillators and noise buffers; zero external audio samples or proprietary binaries.
+- **`components.md`**: Surface tokens distilled from open design tokens and component specifications under MIT licenses.
+
