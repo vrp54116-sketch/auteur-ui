@@ -3,7 +3,7 @@
 Taste conflict detection ledger across distilled upstream design skills.
 *Thesis invariant*: Do NOT auto-resolve taste conflicts. Human editors resolve taste divergences in `pipeline/resolutions.yml`.
 
-Generated: 2026-11-13T16:14:26.316Z
+Generated: 2026-11-15T06:04:07.437Z
 Total Conflicts Detected: 2
 
 ---
